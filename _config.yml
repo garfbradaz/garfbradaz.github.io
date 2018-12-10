@@ -1,4 +1,2 @@
-theme:  jekyll-theme-minimal
-logo: /assets/img/logo.png
-plugins:
-  - jekyll-feed
+theme: jekyll-theme-minimal
+
