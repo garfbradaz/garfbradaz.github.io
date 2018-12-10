@@ -16,5 +16,5 @@ I knew github has [Github Pages](https://pages.github.com/), and it used [Jekyll
 
 As I move on I change the style and layout etc, ut for now (and posterity) here is the Home Page from day 1:
 
-![Day 1](/assets/img/posts/day_1.png)
+![Day 1](/assets/img/posts/day_1.PNG)
 
