@@ -1,0 +1,16 @@
+---
+layout: default
+---
+<h2>Welcome</h2>
+<p>
+    The 1st attempt at building a new blog using Jekyll, Windows Subsystem for Linux and Visual Studio Code.
+</p>
+
+<ul>
+    {% for post in site.posts %}
+        <li>
+            <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
+            <p>{{ post.excerpt }}</p>
+        </li>
+    {% endfor %}
+</ul>
