@@ -231,9 +231,9 @@ So mine is:
 
 Update your title and description for your blog.
 
-    ```
-        title: Gareth Bradleys Blog
-        description: garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.
+    ```yaml
+    title: Gareth Bradleys Blog
+    description: garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.
     ```
 
 ## Release, Release, Release
