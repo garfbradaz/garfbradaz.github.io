@@ -3,6 +3,7 @@ layout: post
 author: gareth
 category: blog
 tags: [misc,jekyll]
+excerpt_separator: <!--more-->
 ---
 
 ## It's alive!
