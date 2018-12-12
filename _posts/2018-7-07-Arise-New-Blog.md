@@ -3,11 +3,12 @@ layout: post
 author: gareth
 category: blog
 tags: [misc,jekyll]
+excerpt_separator: <!--more-->
 ---
 
 ## It's alive!
 
-I have wanted to move [my current](https://mywebanecdotes.com/) off Wordpress for sometime, but time has always been a factor. As a developer I find myself living within *Visual Studio Code*, so I decided to set up a blog which can:
+I have wanted to move [my current](https://mywebanecdotes.com/) off Wordpress for sometime <!--more-->, but time has always been a factor. As a developer I find myself living within *Visual Studio Code*, so I decided to set up a blog which can:
 
 - Use my Visual Studio Code
 - Use my git skills

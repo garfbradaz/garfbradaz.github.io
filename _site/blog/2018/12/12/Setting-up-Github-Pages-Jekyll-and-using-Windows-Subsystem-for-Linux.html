@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Gareth Bradleys Blog" />
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Setting Up Github Pages Jekyll And Using Windows Subsystem For Linux | Gareth Bradleys Blog</title>
+<meta name="generator" content="Jekyll v3.7.4" />
+<meta property="og:title" content="Setting Up Github Pages Jekyll And Using Windows Subsystem For Linux" />
+<meta name="author" content="gareth" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Setting up Github Pages, Jekyll and using Windows Subsystem for Linux The 1st how to for setting up the blog and tools needed to edit it. I’m a Windows fan (I love my Surface devices), but I’m also starting to appreciate Linux" />
+<meta property="og:description" content="Setting up Github Pages, Jekyll and using Windows Subsystem for Linux The 1st how to for setting up the blog and tools needed to edit it. I’m a Windows fan (I love my Surface devices), but I’m also starting to appreciate Linux" />
+<link rel="canonical" href="http://localhost:4000/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux.html" />
+<meta property="og:url" content="http://localhost:4000/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux.html" />
+<meta property="og:site_name" content="Gareth Bradleys Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-12-12T00:00:00+00:00" />
+<script type="application/ld+json">
+{"description":"Setting up Github Pages, Jekyll and using Windows Subsystem for Linux The 1st how to for setting up the blog and tools needed to edit it. I’m a Windows fan (I love my Surface devices), but I’m also starting to appreciate Linux","author":{"@type":"Person","name":"gareth"},"@type":"BlogPosting","url":"http://localhost:4000/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux.html","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo.png"},"name":"gareth"},"headline":"Setting Up Github Pages Jekyll And Using Windows Subsystem For Linux","dateModified":"2018-12-12T00:00:00+00:00","datePublished":"2018-12-12T00:00:00+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=455589ad2ba7b7efb03d194258cd359372ec721b">
+    <link rel="stylesheet" href="/assets/css/matrix.css?v=455589ad2ba7b7efb03d194258cd359372ec721b">
+    <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="http://localhost:4000/">Gareth Bradleys Blog</a></h1>
+        <nav>
+  
+    <a href="/" >
+      Home
+    </a>
+  
+    <a href="/about.html" >
+      About
+    </a>
+  
+    <a href="/blog.html" >
+      Blog
+    </a>
+  
+</nav>
+
+        
+          <img src="/assets/img/logo.png" alt="Logo" />
+        
+
+        <p>garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.</p>
+
+        
+        <p class="view"><a href="http://github.com/garfbradaz/garfbradaz.github.io">View the Project on GitHub <small>garfbradaz/garfbradaz.github.io</small></a></p>
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <h1>Setting Up Github Pages Jekyll And Using Windows Subsystem For Linux</h1>
+<p>12 Dec 2018 - gareth - blog</p>
+
+<h2 id="setting-up-github-pages-jekyll-and-using-windows-subsystem-for-linux">Setting up Github Pages, Jekyll and using Windows Subsystem for Linux</h2>
+
+<p>The 1st <em>how to</em> for setting up the blog and tools needed to edit it. I’m a Windows fan (I love my Surface devices), but I’m also starting to appreciate Linux <!--more-->, so this is a perfect opportunity to set up my Surface Book to use <a href="https://docs.microsoft.com/en-us/windows/wsl/faq">Windows Subsystem for Linux</a>, which allows you command line access to Linux. I’m assured this is not a virtual machine, but a <a href="https://blogs.msdn.microsoft.com/wsl/2016/04/22/windows-subsystem-for-linux-overview/">syscall mapping between Windows and Linux itself</a>, to actual Linux binaries themselves.</p>
+
+<p>I’m going to provide the instructions on how I set up <em>my</em> Surface Book. You may want to tweak these to your needs.</p>
+
+<p>NB: I originally posted this blog post <strong>December 2018</strong> so if anything has changed or doesn’t work, let me know.</p>
+
+<h2 id="wsl-set-up">WSL Set up</h2>
+
+<p>Windows Subsystem for linux needs setting up. If you have done this previously, then skip to <a href="#visual-studio-code">code instructions</a></p>
+
+<ol>
+  <li>
+    <p>Use Powershell Windows Subsystem for Linux (WSL), make sure you Run as Administrator:</p>
+
+    <p><code class="highlighter-rouge">Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux</code></p>
+  </li>
+  <li>
+    <p>The prompt will ask you to restart your machine, so make sure you save anything before pressing <strong>Y</strong>:</p>
+
+    <p><img src="/assets/img/posts/release-notes_powershell.png" alt="Powershell screen shot" /></p>
+  </li>
+  <li>
+    <p>Use the Windows Store to install your favourite Linux Distro. I chose <em>Debian</em>. More information <a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10#windows-10-fall-creators-update-and-later-install-from-the-microsoft-store">here</a></p>
+  </li>
+</ol>
+
+<h2 id="visual-studio-code">Visual Studio Code</h2>
+
+<p>Again if you have installed this previously, then jump to <a href="#install-jekyll-on-wsl">Jekyll</a>.</p>
+
+<p>I’m a great VSCode advocate, mainly from using .NET Core and C#. But I’m using TypeScript a little and using it more and more. I actually get a little sad face when I realise I need to use Visual Studio Enterprise for anything now (Usually because Razor support isn’t the best in Code, but improving).</p>
+
+<ol>
+  <li>
+    <p>I’m going to use Visual Studio Code to allow me to compose and edit markdown. Its the perfect editor because:</p>
+
+    <ul>
+      <li>The IDE is cross platform, so you can look after your blog within the IDE across any platform.</li>
+      <li>It has git out of the box.</li>
+      <li>Various Markdown extensions for extending the experience.</li>
+      <li>Markdown Preview, so you can view how your post will look.</li>
+    </ul>
+
+    <p>I will do a separate post on my Visual Code extension set up.</p>
+  </li>
+  <li>
+    <p>Download and install Code <a href="https://code.visualstudio.com/download">here</a>.</p>
+  </li>
+</ol>
+
+<h2 id="install-jekyll-on-wsl">Install Jekyll on WSL</h2>
+
+<p>As I mentioned previously, I installed Debian, so the instructions I’m giving are for Debian. More more information see <a href="https://jekyllrb.com/docs/installation/">here</a>.</p>
+
+<ol>
+  <li>
+    <p>Firstly open a bash Window. I fired up Debian app I just installed.</p>
+  </li>
+  <li>
+    <p>Install dependencies for Ruby:</p>
+
+    <p><code class="highlighter-rouge">sudo apt-get install ruby-full build-essential</code></p>
+  </li>
+  <li>
+    <p>Now, I got the following error when I ran this on Debian:</p>
+
+    <blockquote>
+      <p>Reading state information… Done
+E: Unable to locate package ruby-full
+E: Unable to locate package build-essential</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>Essentially the <em>sources.lst</em> is missing the <em>deb-src</em> links to the repository.</p>
+
+    <p><img src="/assets/img/posts/deb-src.png" alt="deb-src" /></p>
+  </li>
+  <li>
+    <p>Use <code class="highlighter-rouge">sudo nano /etc/apt/sources.list</code> to edit the file and add the missing entries. Here is my file</p>
+
+    <p><img src="/assets/img/posts/deb-src-added.png" alt="deb-src" /></p>
+  </li>
+  <li>
+    <p>Run <code class="highlighter-rouge">sudo apt update</code>.</p>
+  </li>
+  <li>
+    <p>Re-run step 2. If this works, move on.</p>
+  </li>
+  <li>
+    <p>Add the environment variables for gems for when bash is run interactively:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     <span class="nb">echo</span> <span class="s1">'# Install Ruby Gems to ~/gems'</span> <span class="o">&gt;&gt;</span> ~/.bashrc
+     <span class="nb">echo</span> <span class="s1">'export GEM_HOME=$HOME/gems'</span> <span class="o">&gt;&gt;</span> ~/.bashrc
+     <span class="nb">echo</span> <span class="s1">'export PATH=$HOME/gems/bin:$PATH'</span> <span class="o">&gt;&gt;</span> ~/.bashrc
+     <span class="nb">source</span> ~/.bashrc
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Install Jekyll and bundler using <code class="highlighter-rouge">gem install jekyll bundler</code>.</p>
+  </li>
+  <li>
+    <p>Confirm you have <em>GCC</em> and <em>Make</em> available:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    gcc <span class="nt">-v</span>
+    g++ <span class="nt">-v</span>
+    make <span class="nt">-v</span>
+</code></pre></div>    </div>
+    <h2 id="install-git-on-wsl">Install Git on WSL</h2>
+  </li>
+</ol>
+
+<p>You may already have <em>Git for Windows</em> set up on your Windows instance, but you will need to make sure Git is on WSL as well. Follow these instructions.</p>
+
+<ol>
+  <li>
+    <p>Install git:</p>
+
+    <p><code class="highlighter-rouge">sudo apt install git</code></p>
+  </li>
+  <li>
+    <p>To validate it has worked, run <code class="highlighter-rouge">git version</code>.</p>
+  </li>
+  <li>
+    <p>Set up standard email and username details:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     git config <span class="nt">--global</span> user.email <span class="s2">"your@email.com"</span>
+     git config <span class="nt">--global</span> user.name <span class="s2">"your username"</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>As described <a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration#_code_core_autocrlf_code">here</a>, need      to set your line endings correctly.</p>
+
+    <p><code class="highlighter-rouge">git config --global core.autocrlf input</code></p>
+  </li>
+</ol>
+
+<h2 id="create-github-repository">Create Github Repository</h2>
+
+<ol>
+  <li>
+    <p>There are different steps that need taking when creating your repository. Firstly the repository names needs to be a      specific format:</p>
+
+    <blockquote>
+      <p>your-github-username.github.io</p>
+    </blockquote>
+
+    <p>You can find your username my navigating (top right) click Your <em>Avatar-&gt;Your profile</em>. Example mine is garfbradaz:</p>
+
+    <p><img src="/assets/img/posts/me-github.png" alt="me" /></p>
+
+    <p>So mine is <em>garfbradaz.github.io</em>.</p>
+  </li>
+  <li>
+    <p>You can select a Jekyll theme as well also. This is saved to the <code class="highlighter-rouge">_config.yml</code> file in your repository. This can be       changed at a later date.</p>
+
+    <p><img src="/assets/img/posts/theme-github.png" alt="github options" /></p>
+  </li>
+  <li>
+    <p>Once the site is published, your repository name is your URL for your new site:</p>
+
+    <p><a href="https://garfbradaz.github.io">my site</a></p>
+  </li>
+</ol>
+
+<h2 id="update-github-with-generated-ssh-using-wsl">Update Github with generated SSH using WSL</h2>
+
+<ol>
+  <li>
+    <p>Run the following in WSL bash terminal to generate a key, replacing the email with yours that you use for Github:</p>
+
+    <p><code class="highlighter-rouge">ssh-keygen -t rsa -b 4096 -C  &lt;your@githubemail.com&gt;</code></p>
+
+    <p>Press <strong>Enter</strong> to accept the default directory, and add a pass phrase.</p>
+  </li>
+  <li>
+    <p>Add the SSH private key to <em>ssh-agent</em> so that you dont need to write the pass phrase each and every git commit:</p>
+
+    <p><code class="highlighter-rouge">ssh-add ~/.ssh/id_rsa</code></p>
+
+    <p><strong>Note:</strong> This is using <strong>~</strong> which is fine as we are within a Linux bash terminal.</p>
+  </li>
+  <li>
+    <p>Run the following to Print tne RSA key to the screen. Then using your mouse, copy to clipboard:</p>
+
+    <p><code class="highlighter-rouge">cat ~/.ssh/id_rsa.pub</code></p>
+  </li>
+  <li>
+    <p>Navigate to github in your browser of choice.</p>
+  </li>
+  <li>
+    <p>Click on <strong>Your profile</strong>.</p>
+  </li>
+  <li>
+    <p>Click on <strong>SSH and GPG keys</strong>.</p>
+  </li>
+  <li>
+    <p>Click on button <strong>New SSH Key</strong>.</p>
+  </li>
+  <li>
+    <p>Give the key a meaningful title.</p>
+  </li>
+  <li>
+    <p>Paste RSA key.</p>
+  </li>
+  <li>
+    <p>Click on <strong>Add RSA key</strong>.</p>
+  </li>
+</ol>
+
+<h2 id="clone-the-site-to-wsl">Clone the Site to WSL</h2>
+
+<ol>
+  <li>
+    <p>Firstly run <em>Visual Studio Code</em>.</p>
+  </li>
+  <li>
+    <p>Open a Terminal within Visual Studio code. One option for doing that is <strong>Menu-&gt;Terminal-&gt;New Terminal</strong>.</p>
+  </li>
+  <li>
+    <p>Then run bash.</p>
+  </li>
+  <li>
+    <p>Something important to note. After you run bash, you will be greeted with a directory prefixed with <code class="highlighter-rouge">/mnt/c</code>. This        means the drive is mounted and mapped to <code class="highlighter-rouge">C:\</code>. You can prove this by doing a <code class="highlighter-rouge">ls</code>. Look at all those familiar Windows    files:</p>
+
+    <p><img src="/assets/img/posts/windows-files-bash.png" alt="WSL Bash Directory Listing" /></p>
+
+    <p><strong>Note:</strong> <code class="highlighter-rouge">cd ~ &amp;&amp; pwd </code> isn’t your traditional home directory, so dont place any files in here you want Windows to access. This <strong>DOES NOT</strong> map to your Windows Home directory. If you edit this Linux Only Windows files, you will corrupt your Linux install.</p>
+
+    <p>Basically it is safe to use the <code class="highlighter-rouge">/mnt/c</code>.</p>
+  </li>
+  <li>
+    <p>With that in mind, navigate to the folder you wish to clone your Jekyll repository, here is an example for mine (You      do this in the same bash terminal you created in Visual Studio Code):</p>
+
+    <p><code class="highlighter-rouge">cd /mnt/c/code/blog</code></p>
+
+    <p>This is the following Windows directory:</p>
+
+    <blockquote>
+      <p>C:\code\blog</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>Git clone into this directory:</p>
+
+    <p><code class="highlighter-rouge">git clone &lt;your-repository-url&gt; .</code></p>
+
+    <p>And because you are within Visual Studio Code, the files will appear straight away:</p>
+
+    <p><img src="/assets/img/posts/git-in-vscode.png" alt="files appear in VSCode" /></p>
+  </li>
+  <li>
+    <p>Now create a file called <em>Gemfile</em> and add the following (root of the directory):</p>
+
+    <blockquote>
+      <p>source ‘https://rubygems.org’
+gem ‘github-pages’, group: :jekyll_plugins</p>
+    </blockquote>
+
+    <p><img src="/assets/img/posts/gem-in-vscode.png" alt="files appear in VSCode" /></p>
+
+    <p>As you can see VSCode recognises up its a Gemfile and uses a nice Ruby icon.</p>
+  </li>
+  <li>
+    <p>Now create the dependencies.  Within the bash terminal within Visual Studio code run:</p>
+
+    <p><code class="highlighter-rouge">bundle install</code></p>
+
+    <p><strong>Note:</strong> At this stage for Debian, I found there was an error installing <strong>nokogirl-1.8.5</strong> dependencies.</p>
+
+    <p>I resolved this by running the following, then re-running <code class="highlighter-rouge">bundle install</code>.</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     <span class="nb">sudo </span>apt-get install libpng-dev
+     <span class="nb">sudo </span>apt-get install <span class="nt">--reinstall</span> zlibc zlib1g zlib1g-dev
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="optional-modify-layout-of-theme">(Optional) Modify Layout of Theme</h2>
+
+<p>If you want to amend the layout; add your own styles or navigation, then you need to check your themes repository for instructions on how to update (each may have different instructions).</p>
+
+<p>The URL scheme for the repositories is:</p>
+
+<blockquote>
+  <p>https://github.com/pages-themes/<your-selected-theme></your-selected-theme></p>
+</blockquote>
+
+<p>So mine is:</p>
+
+<p>https://github.com/pages-themes/minimal</p>
+
+<h2 id="update-_configyml">Update _config.yml</h2>
+
+<p>Update your title and description for your blog.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>```yaml
+    title: Gareth Bradleys Blog
+    description: garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.
+``` ## Release, Release, Release...
+</code></pre></div></div>
+
+<p>After you have proof read it and checked obviously. The beauty of Jekyll is you to <strong>publish</strong> your blog, you just use the git skills you (may) already have, so run the following in bash while in your repository where your <code class="highlighter-rouge">.git</code> folder is:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>```bash
+    git add .
+    git commit -m "Start of life for my awesome blog - Arise!"
+    git push origin
+```
+</code></pre></div></div>
+
+<h2 id="next-time">Next time…</h2>
+
+<p>I will talk about <em>How to Add Google analytics</em> and <em>How to publish your first post</em> all in Visual Studio Code.</p>
+
+<p>I haven’t written this blog post without help. I would like to shout out to the following blogs and documentation  for assisting me:</p>
+
+<p><a href="https://daverupert.com/2018/04/developing-on-windows-with-wsl-and-visual-studio-code/">Dave Rupert</a></p>
+
+<p><a href="https://pages.github.com/">Github Pages</a></p>
+
+<p><a href="https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/">Github Docs - SSH</a></p>
+
+<p><a href="https://blogs.msdn.microsoft.com/commandline/2016/11/17/do-not-change-linux-files-using-windows-apps-and-tools/">Microsoft WSL Blog</a></p>
+
+<p><a href="https://jekyllrb.com/docs/installation/ubuntu/">Jekyll Docs - Ubuntu</a></p>
+
+<p><a href="https://jekyllrb.com/docs/">Jekyll Docs</a></p>
+
+
+
+
+    <hr>
+<span>
+   <div>
+      
+      <div>
+         <h3> Gareth Bradley &nbsp;
+           
+              <a href="garfbradaz" class="icon fa-twitter"><span class="label">Twitter</span></a> 
+            
+          </h3>
+      </div>
+   </div>
+   Lover of tech, running and Guinness
+</span>
+<br>
+
+
+
+
+
+
+      </section>
+      <footer>
+        
+        <p>This project is maintained by <a href="http://github.com/garfbradaz">garfbradaz</a></p>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/assets/js/scale.fix.js"></script>
+    <script src="/assets/js/matrix.js"></script>
+    
+  </body>
+</html>
