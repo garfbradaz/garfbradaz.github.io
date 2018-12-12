@@ -221,11 +221,11 @@ If you want to amend the layout; add your own styles or navigation, then you nee
 
 The URL scheme for the repositories is:
 
-> https://github.com/pages-themes/<your-selected-theme>
+> <https://github.com/pages-themes/your-selected-theme>
 
 So mine is:
 
-https://github.com/pages-themes/minimal
+[https://github.com/pages-themes/minimal](https://github.com/pages-themes/minimal)
 
 ## Update _config.yml
 
