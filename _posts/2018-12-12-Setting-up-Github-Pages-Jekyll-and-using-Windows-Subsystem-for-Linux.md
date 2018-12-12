@@ -237,7 +237,6 @@ Update your title and description for your blog.
 ## Release, Release, Release
 
 After you have proof read it and checked obviously. The beauty of Jekyll is you to **publish** your blog, you just use the git skills you (may) already have, so run the following in bash while in your repository where your `.git` folder is:
-
     `git add .`
     `git commit -m "Start of life for my awesome blog - Arise!"`
     `git push origin`
