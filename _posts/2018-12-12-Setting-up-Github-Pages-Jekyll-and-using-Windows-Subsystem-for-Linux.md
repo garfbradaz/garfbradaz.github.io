@@ -231,7 +231,7 @@ https://github.com/pages-themes/minimal
 
 Update your title and description for your blog.
 
-    ```yaml
+    ```
         title: Gareth Bradleys Blog
         description: garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.
     ```
