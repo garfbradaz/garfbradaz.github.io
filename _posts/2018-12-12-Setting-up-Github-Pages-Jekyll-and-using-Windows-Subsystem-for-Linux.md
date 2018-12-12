@@ -211,8 +211,8 @@ You may already have *Git for Windows* set up on your Windows instance, but you 
    I resolved this by running the following, then re-running `bundle install`.
 
     ```bash
-        sudo apt-get install libpng-dev
-        sudo apt-get install --reinstall zlibc zlib1g zlib1g-dev
+    sudo apt-get install libpng-dev
+    sudo apt-get install --reinstall zlibc zlib1g zlib1g-dev
     ```
 
 ## (Optional) Modify Layout of Theme
