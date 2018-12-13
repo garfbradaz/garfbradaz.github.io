@@ -2,7 +2,7 @@
 layout: post
 author: gareth
 category: blog
-tags: [jekyll,release-notes,how-to]
+tags: [how-to,dotnet-core,beginners]
 excerpt_separator: <!--more-->
 ---
 ## Debugging ASP.NET Core in a Linux Docker with Visual Studio Code

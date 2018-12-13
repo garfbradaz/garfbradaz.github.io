@@ -1,4 +1,179 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-12-12T07:58:44+00:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Gareth Bradleys Blog</title><subtitle>garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.</subtitle><entry><title type="html">Setting Up Github Pages Jekyll And Using Windows Subsystem For Linux</title><link href="http://localhost:4000/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux.html" rel="alternate" type="text/html" title="Setting Up Github Pages Jekyll And Using Windows Subsystem For Linux" /><published>2018-12-12T00:00:00+00:00</published><updated>2018-12-12T00:00:00+00:00</updated><id>http://localhost:4000/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux</id><content type="html" xml:base="http://localhost:4000/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux.html">&lt;h2 id=&quot;setting-up-github-pages-jekyll-and-using-windows-subsystem-for-linux&quot;&gt;Setting up Github Pages, Jekyll and using Windows Subsystem for Linux&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-12-13T21:08:03+00:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Gareth Bradleys Blog</title><subtitle>garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.</subtitle><entry><title type="html">Debug Dotnet Core In Docker</title><link href="http://localhost:4000/blog/2018/12/13/debug-dotnet-core-in-docker.html" rel="alternate" type="text/html" title="Debug Dotnet Core In Docker" /><published>2018-12-13T00:00:00+00:00</published><updated>2018-12-13T00:00:00+00:00</updated><id>http://localhost:4000/blog/2018/12/13/debug-dotnet-core-in-docker</id><content type="html" xml:base="http://localhost:4000/blog/2018/12/13/debug-dotnet-core-in-docker.html">&lt;h2 id=&quot;debugging-aspnet-core-in-a-linux-docker-with-visual-studio-code&quot;&gt;Debugging ASP.NET Core in a Linux Docker with Visual Studio Code&lt;/h2&gt;
+
+&lt;p&gt;So, you have started using Docker for your .NET Core applications - awesome news. You are using Linux Containers, and Visual Studio Code, and you then go to Debug your container…..oh. &lt;!--more--&gt; (I’m using Windows).&lt;/p&gt;
+
+&lt;p&gt;Its not the most straight forward process I have found, if you are looking at getting this up and running. Firstly I didn’t figure this out on my own, the reason I’m blogging about it is because I meshed together the knowledge I had, plus these very informative posts:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://blog.jonathanchannon.com/2017/06/07/debugging-netcore-docker/&quot;&gt;Jonathan Channon&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.richard-banks.org/2018/07/debugging-core-in-docker.html&quot;&gt;Richard Banks&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;It was the above two posts that glued it together for me.  Have a good read of those as well. Before we go any further, just to confirm these instructions are for &lt;em&gt;Visual Studio Code&lt;/em&gt; and &lt;em&gt;Linux Containers&lt;/em&gt; using &lt;em&gt;Docker Compose&lt;/em&gt;, I’m not sure how this is set-up on Visual Studio. I’m presuming you have &lt;em&gt;VSCode&lt;/em&gt;, &lt;em&gt;Docker&lt;/em&gt; and &lt;em&gt;.NET Core SDK&lt;/em&gt; installed. And you are using Linux Containers.&lt;/p&gt;
+
+&lt;h2 id=&quot;dockerfile&quot;&gt;DockerFile&lt;/h2&gt;
+
+&lt;p&gt;Firstly lets look at my multi-staged (Multiple &lt;code class=&quot;highlighter-rouge&quot;&gt;FROM&lt;/code&gt;) Dockerfile for building my project.&lt;/p&gt;
+
+&lt;h3 id=&quot;1st-stage-build&quot;&gt;1st Stage Build&lt;/h3&gt;
+
+&lt;p&gt;The first part of the Dockerfile &lt;code class=&quot;highlighter-rouge&quot;&gt;build-env&lt;/code&gt; stage, takes an &lt;code class=&quot;highlighter-rouge&quot;&gt;ARG&lt;/code&gt; of &lt;code class=&quot;highlighter-rouge&quot;&gt;buildconfig&lt;/code&gt;, which controls how the &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet publish&lt;/code&gt; is configured. And yes I know, I have a todo item to refactor the if/else to just pass the &lt;code class=&quot;highlighter-rouge&quot;&gt;buildconfig&lt;/code&gt; as a &lt;code class=&quot;highlighter-rouge&quot;&gt;-c&lt;/code&gt; value.&lt;/p&gt;
+
+&lt;h3 id=&quot;2nd-stage-run&quot;&gt;2nd Stage Run&lt;/h3&gt;
+
+&lt;p&gt;So the 1st stage handled the build, the 2nd handles the running of the Web API project. As you can see, there is a &lt;code class=&quot;highlighter-rouge&quot;&gt;Debug&lt;/code&gt; switch again, to install some dependencies when running in &lt;code class=&quot;highlighter-rouge&quot;&gt;Debug&lt;/code&gt;. Ignore the &lt;strong&gt;mongo&lt;/strong&gt; installs, it is the &lt;em&gt;vsdbg&lt;/em&gt; installation We are interested in.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l&lt;/code&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+
+  &lt;p&gt;The debugger platform has been expanded between Visual Studio 2017 15.3 and
+previous versions of Visual Studio. Visual Studio can now communicate using
+the debug adapter protocol which is used by Visual Studio, Visual Studio Code
+and Visual Studio for Mac. This protocol is now used for debugging
+cross-platform .NET Core applications.&lt;/p&gt;
+
+  &lt;p&gt;&lt;a href=&quot;https://github.com/Microsoft/MIEngine/wiki/Offroad-Debugging-of-.NET-Core-on-Linux---OSX-from-Visual-Studio&quot;&gt;Source&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;So vsdbg is installed &lt;strong&gt;into&lt;/strong&gt; the container to allow remote debugging from your host machine using Visual Studio Code.&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;s&quot;&gt;FROM microsoft/dotnet:2.2-sdk AS build-env&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;ARG buildconfig&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;WORKDIR /app&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;COPY ServiceApp.WebApi.csproj .&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;RUN dotnet restore&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;COPY . .&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;RUN if [ &quot;${buildconfig}&quot; = &quot;Debug&quot; ]; then \&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;dotnet publish -o /publish -c Debug; \&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;else \&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;dotnet publish -o /publish -c Release; \&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;fi&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;FROM microsoft/dotnet:2.2-aspnetcore-runtime&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;ARG buildconfig&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;ENV DEBIAN_FRONTEND noninteractive&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;WORKDIR /publish&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;COPY --from=build-env /publish .&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;RUN if [ &quot;${buildconfig}&quot; = &quot;Debug&quot; ]; then \&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;apt-get update &amp;amp;&amp;amp; \&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;apt-get install -y --no-install-recommends apt-utils &amp;amp;&amp;amp; \&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;apt-get install curl unzip procps mongodb -y &amp;amp;&amp;amp; \&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l /publish/vsdbg; \&lt;/span&gt;
+     &lt;span class=&quot;s&quot;&gt;else \&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;echo &quot;*Whistling*&quot;; \&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;fi&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;ENV DEBIAN_FRONTEND teletype&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;ENTRYPOINT [ &quot;dotnet&quot;,&quot;ServiceApp.WebApi.dll&quot; ]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;launch-task-configuration-for-visual-studio-code&quot;&gt;Launch Task Configuration for Visual Studio Code&lt;/h2&gt;
+
+&lt;p&gt;So this was the bit I struggled with, to the point I &lt;a href=&quot;https://github.com/OmniSharp/omnisharp-vscode/issues/2724&quot;&gt;logged a Github Issue&lt;/a&gt; and subsequently had a light bulb moment afterwards!&lt;/p&gt;
+
+&lt;p&gt;Both Jonathan and Richards work and investigations for their posts, again helped tenfold.&lt;/p&gt;
+
+&lt;p&gt;Important bits are the &lt;code class=&quot;highlighter-rouge&quot;&gt;sourceFileMap&lt;/code&gt; which map your projects code to the binaries in the Container. The &lt;em&gt;/app&lt;/em&gt; in reference in mine, relates to the &lt;em&gt;/app&lt;/em&gt; directory declared in the Dockerfile.&lt;/p&gt;
+
+&lt;p&gt;The other important snippet is the &lt;code class=&quot;highlighter-rouge&quot;&gt;debuggerPath&lt;/code&gt; option. This is the directory where vsdbg has been installed within your Container. You can set different directories within your &lt;code class=&quot;highlighter-rouge&quot;&gt;curl&lt;/code&gt; command in the Dockerfile if you so wish.&lt;/p&gt;
+
+&lt;p&gt;Lastly, note the Container name of &lt;code class=&quot;highlighter-rouge&quot;&gt;webapi_debug&lt;/code&gt;, I set this up in the relevant compose file.&lt;/p&gt;
+
+&lt;p&gt;The below will live in a &lt;code class=&quot;highlighter-rouge&quot;&gt;launch.json&lt;/code&gt; in your &lt;code class=&quot;highlighter-rouge&quot;&gt;.vscode&lt;/code&gt; directory. If configured correctly you should get a nice launch icon:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/posts/debug-vscode-docker.png&quot; alt=&quot;icon&quot; /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Attach to webapi (Docker)&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;type&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;coreclr&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;request&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;attach&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;sourceFileMap&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/app&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;${workspaceFolder}/src/api&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;processId&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;${command:pickRemoteProcess}&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;pipeTransport&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;debuggerPath&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/publish/vsdbg/vsdbg&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;pipeProgram&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;docker&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;pipeCwd&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;${workspaceFolder}/src/api&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;quoteArgs&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;pipeArgs&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;exec&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;-i&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;webapi_debug&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;composing&quot;&gt;Composing&lt;/h2&gt;
+
+&lt;p&gt;Because I’m using separate Docker containers for &lt;em&gt;MongoDB&lt;/em&gt; and &lt;em&gt;Identity Server&lt;/em&gt; I use &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose&lt;/code&gt; to knit together my containers.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; I’m planning on doing a Identity Server post next on my experiences in getting that set-up.&lt;/p&gt;
+
+&lt;p&gt;The below is from my &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose.dev.yml&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;p&gt;So the container with the interesting configurations is &lt;code class=&quot;highlighter-rouge&quot;&gt;webapi&lt;/code&gt; which is my ASP.NET Core Web API project.  As you can see I set the container name to &lt;code class=&quot;highlighter-rouge&quot;&gt;webapi_debug&lt;/code&gt; is set. As I mentioned before, the launch task needs that to remote into that particular container.&lt;/p&gt;
+
+&lt;p&gt;You can also see I mount my Source Code directory from my &lt;strong&gt;host&lt;/strong&gt; Windows machine using &lt;code class=&quot;highlighter-rouge&quot;&gt;volumes&lt;/code&gt; using a relative path to my source code directory (&lt;em&gt;../api&lt;/em&gt;) to &lt;em&gt;:/app&lt;/em&gt;, allowing us, when a breakpoint is hit, for the code to be shown. If you configure this bit wrong, you will get the following error when the breakpoint is thrown:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/posts/not-found-debug.png&quot; alt=&quot;file-not-found&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The other interesting config points, are the &lt;strong&gt;ASPNETCORE_&lt;/strong&gt;* environment variables for &lt;code class=&quot;highlighter-rouge&quot;&gt;Development&lt;/code&gt; and the &lt;code class=&quot;highlighter-rouge&quot;&gt;buildconfig&lt;/code&gt; argument of &lt;code class=&quot;highlighter-rouge&quot;&gt;Debug&lt;/code&gt;, which as we learnt previously, is passed into the &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; and used.&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;3&quot;&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;identity&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;garfbradaz/serviceident:develop&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;identity&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;buildconfig&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Debug&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;../quickidentity&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;dockerfile&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Dockerfile&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;../quickidentity:/app2&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ASPNETCORE_ENVIRONMENT=Development&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ASPNETCORE_URLS=http://identity:5002&lt;/span&gt;  
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;AuthorityUrl=http://identity:5002&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;5002:5002&quot;&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;webapi&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;garfbradaz/serviceapp:develop&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;webapi_debug&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;buildconfig&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Debug&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;../api&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;dockerfile&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Dockerfile&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;../api:/app&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ASPNETCORE_ENVIRONMENT=Development&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ASPNETCORE_URLS=http://+:5001&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;AuthorityUrl=http://identity:5002&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;5001:5001&quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;depends_on&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;mongodb&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;identity&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;mongodb&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;mongo:latest&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;mongodb&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;27017:27017&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;running&quot;&gt;Running&lt;/h2&gt;
+
+&lt;p&gt;So put this all together you can run your containers using the Compose:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose -f docker-compose.dev.yml up -d --build&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Set a breakpoint in your code (Example I set in my Controller), and run your debug task in &lt;em&gt;Visual Studio Code&lt;/em&gt;. This will ask you to pick your process for your &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet&lt;/code&gt; code. Then when the breakpoint is hit,  you can inspect it as normal.&lt;/p&gt;
+
+&lt;p&gt;I find that it can hang and take half a minute sometimes for the debug session to initiate, so bear with it.&lt;/p&gt;
+
+&lt;p&gt;Anyway I hope this helps someone, and a massive thank you to &lt;a href=&quot;https://twitter.com/jchannon&quot;&gt;Jonathan&lt;/a&gt; and &lt;a href=&quot;https://twitter.com/rbanks54&quot;&gt;Richard&lt;/a&gt;.&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><summary type="html">Debugging ASP.NET Core in a Linux Docker with Visual Studio Code So, you have started using Docker for your .NET Core applications - awesome news. You are using Linux Containers, and Visual Studio Code, and you then go to Debug your container…..oh.</summary></entry><entry><title type="html">Setting Up Github Pages Jekyll And Using Windows Subsystem For Linux</title><link href="http://localhost:4000/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux.html" rel="alternate" type="text/html" title="Setting Up Github Pages Jekyll And Using Windows Subsystem For Linux" /><published>2018-12-12T00:00:00+00:00</published><updated>2018-12-12T00:00:00+00:00</updated><id>http://localhost:4000/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux</id><content type="html" xml:base="http://localhost:4000/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux.html">&lt;h2 id=&quot;setting-up-github-pages-jekyll-and-using-windows-subsystem-for-linux&quot;&gt;Setting up Github Pages, Jekyll and using Windows Subsystem for Linux&lt;/h2&gt;
 
 &lt;p&gt;The 1st &lt;em&gt;how to&lt;/em&gt; for setting up the blog and tools needed to edit it. I’m a Windows fan (I love my Surface devices), but I’m also starting to appreciate Linux &lt;!--more--&gt;, so this is a perfect opportunity to set up my Surface Book to use &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/wsl/faq&quot;&gt;Windows Subsystem for Linux&lt;/a&gt;, which allows you command line access to Linux. I’m assured this is not a virtual machine, but a &lt;a href=&quot;https://blogs.msdn.microsoft.com/wsl/2016/04/22/windows-subsystem-for-linux-overview/&quot;&gt;syscall mapping between Windows and Linux itself&lt;/a&gt;, to actual Linux binaries themselves.&lt;/p&gt;
 
@@ -271,8 +446,8 @@ gem ‘github-pages’, group: :jekyll_plugins&lt;/p&gt;
 
     &lt;p&gt;I resolved this by running the following, then re-running &lt;code class=&quot;highlighter-rouge&quot;&gt;bundle install&lt;/code&gt;.&lt;/p&gt;
 
-    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;     &lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get install libpng-dev
-     &lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get install &lt;span class=&quot;nt&quot;&gt;--reinstall&lt;/span&gt; zlibc zlib1g zlib1g-dev
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get install libpng-dev
+ &lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get install &lt;span class=&quot;nt&quot;&gt;--reinstall&lt;/span&gt; zlibc zlib1g zlib1g-dev
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
   &lt;/li&gt;
 &lt;/ol&gt;
@@ -284,33 +459,31 @@ gem ‘github-pages’, group: :jekyll_plugins&lt;/p&gt;
 &lt;p&gt;The URL scheme for the repositories is:&lt;/p&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;https://github.com/pages-themes/&lt;your-selected-theme&gt;&lt;/your-selected-theme&gt;&lt;/p&gt;
+  &lt;p&gt;&lt;a href=&quot;https://github.com/pages-themes/your-selected-theme&quot;&gt;https://github.com/pages-themes/your-selected-theme&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;p&gt;So mine is:&lt;/p&gt;
 
-&lt;p&gt;https://github.com/pages-themes/minimal&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/pages-themes/minimal&quot;&gt;https://github.com/pages-themes/minimal&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;update-_configyml&quot;&gt;Update _config.yml&lt;/h2&gt;
 
 &lt;p&gt;Update your title and description for your blog.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;```yaml
-    title: Gareth Bradleys Blog
-    description: garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.
-``` ## Release, Release, Release...
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; title: Gareth Bradleys Blog
+&amp;gt; description: garfbradaz new blog, hosted on github. Rambling about coding, running and &amp;gt; any other of my ramblings.
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;release-release-release&quot;&gt;Release, Release, Release&lt;/h2&gt;
 
 &lt;p&gt;After you have proof read it and checked obviously. The beauty of Jekyll is you to &lt;strong&gt;publish&lt;/strong&gt; your blog, you just use the git skills you (may) already have, so run the following in bash while in your repository where your &lt;code class=&quot;highlighter-rouge&quot;&gt;.git&lt;/code&gt; folder is:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;```bash
-    git add .
-    git commit -m &quot;Start of life for my awesome blog - Arise!&quot;
-    git push origin
-```
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git add &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+git commit &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Start of life for my awesome blog - Arise!&quot;&lt;/span&gt;
+git push origin
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h2 id=&quot;next-time&quot;&gt;Next time…&lt;/h2&gt;
+&lt;h2 id=&quot;next-time&quot;&gt;Next time&lt;/h2&gt;
 
 &lt;p&gt;I will talk about &lt;em&gt;How to Add Google analytics&lt;/em&gt; and &lt;em&gt;How to publish your first post&lt;/em&gt; all in Visual Studio Code.&lt;/p&gt;
 
@@ -328,7 +501,7 @@ gem ‘github-pages’, group: :jekyll_plugins&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://jekyllrb.com/docs/&quot;&gt;Jekyll Docs&lt;/a&gt;&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="jekyll" /><category term="release-notes" /><category term="how-to" /><summary type="html">Setting up Github Pages, Jekyll and using Windows Subsystem for Linux The 1st how to for setting up the blog and tools needed to edit it. I’m a Windows fan (I love my Surface devices), but I’m also starting to appreciate Linux</summary></entry><entry><title type="html">Arise New Blog</title><link href="http://localhost:4000/blog/2018/07/07/Arise-New-Blog.html" rel="alternate" type="text/html" title="Arise New Blog" /><published>2018-07-07T00:00:00+01:00</published><updated>2018-07-07T00:00:00+01:00</updated><id>http://localhost:4000/blog/2018/07/07/Arise-New-Blog</id><content type="html" xml:base="http://localhost:4000/blog/2018/07/07/Arise-New-Blog.html">&lt;h2 id=&quot;its-alive&quot;&gt;It’s alive!&lt;/h2&gt;
 
-&lt;p&gt;I have wanted to move &lt;a href=&quot;https://mywebanecdotes.com/&quot;&gt;my current&lt;/a&gt; off Wordpress for sometime &lt;!--more--&gt;, but time has always been a factor. As a developer I find myself living within &lt;em&gt;Visual Studio Code&lt;/em&gt;, so I decided to set up a blog which can:&lt;/p&gt;
+&lt;p&gt;I have wanted to move &lt;a href=&quot;https://mywebanecdotes.com/&quot;&gt;my current&lt;/a&gt; off Wordpress for sometime, &lt;!--more--&gt;, but time has always been a factor. As a developer I find myself living within &lt;em&gt;Visual Studio Code&lt;/em&gt;, so I decided to set up a blog which can:&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Use my Visual Studio Code&lt;/li&gt;
@@ -339,4 +512,4 @@ gem ‘github-pages’, group: :jekyll_plugins&lt;/p&gt;
 
 &lt;p&gt;As I move on I change the style and layout etc, but for now (and posterity) here is the Home Page from day 1:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/img/posts/day_1.PNG&quot; alt=&quot;Day 1&quot; /&gt;&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="misc" /><category term="jekyll" /><summary type="html">It’s alive! I have wanted to move my current off Wordpress for sometime</summary></entry></feed>
+&lt;p&gt;&lt;img src=&quot;/assets/img/posts/day_1.PNG&quot; alt=&quot;Day 1&quot; /&gt;&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="misc" /><category term="jekyll" /><summary type="html">It’s alive! I have wanted to move my current off Wordpress for sometime,</summary></entry></feed>

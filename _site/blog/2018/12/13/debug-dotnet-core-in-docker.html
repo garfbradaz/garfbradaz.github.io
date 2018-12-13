@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Gareth Bradleys Blog" />
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Debug Dotnet Core In Docker | Gareth Bradleys Blog</title>
+<meta name="generator" content="Jekyll v3.7.4" />
+<meta property="og:title" content="Debug Dotnet Core In Docker" />
+<meta name="author" content="gareth" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Debugging ASP.NET Core in a Linux Docker with Visual Studio Code So, you have started using Docker for your .NET Core applications - awesome news. You are using Linux Containers, and Visual Studio Code, and you then go to Debug your container…..oh." />
+<meta property="og:description" content="Debugging ASP.NET Core in a Linux Docker with Visual Studio Code So, you have started using Docker for your .NET Core applications - awesome news. You are using Linux Containers, and Visual Studio Code, and you then go to Debug your container…..oh." />
+<link rel="canonical" href="http://localhost:4000/blog/2018/12/13/debug-dotnet-core-in-docker.html" />
+<meta property="og:url" content="http://localhost:4000/blog/2018/12/13/debug-dotnet-core-in-docker.html" />
+<meta property="og:site_name" content="Gareth Bradleys Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-12-13T00:00:00+00:00" />
+<script type="application/ld+json">
+{"description":"Debugging ASP.NET Core in a Linux Docker with Visual Studio Code So, you have started using Docker for your .NET Core applications - awesome news. You are using Linux Containers, and Visual Studio Code, and you then go to Debug your container…..oh.","author":{"@type":"Person","name":"gareth"},"@type":"BlogPosting","url":"http://localhost:4000/blog/2018/12/13/debug-dotnet-core-in-docker.html","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo.png"},"name":"gareth"},"headline":"Debug Dotnet Core In Docker","dateModified":"2018-12-13T00:00:00+00:00","datePublished":"2018-12-13T00:00:00+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/blog/2018/12/13/debug-dotnet-core-in-docker.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=efd6819d29cdcc01522115417f7563884fc17c72">
+    <link rel="stylesheet" href="/assets/css/matrix.css?v=efd6819d29cdcc01522115417f7563884fc17c72">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130935873-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-130935873-1');
+    </script>
+    <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="http://localhost:4000/">Gareth Bradleys Blog</a></h1>
+        <nav>
+  
+    <a href="/" >
+      Home
+    </a>
+  
+    <a href="/about.html" >
+      About
+    </a>
+  
+    <a href="/blog.html" >
+      Blog
+    </a>
+  
+</nav>
+
+        
+          <img src="/assets/img/logo.png" alt="Logo" />
+        
+
+        <p>garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.</p>
+
+        
+        <p class="view"><a href="http://github.com/garfbradaz/garfbradaz.github.io">View the Project on GitHub <small>garfbradaz/garfbradaz.github.io</small></a></p>
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <h1>Debug Dotnet Core In Docker</h1>
+<p>13 Dec 2018 - gareth - blog</p>
+
+<h2 id="debugging-aspnet-core-in-a-linux-docker-with-visual-studio-code">Debugging ASP.NET Core in a Linux Docker with Visual Studio Code</h2>
+
+<p>So, you have started using Docker for your .NET Core applications - awesome news. You are using Linux Containers, and Visual Studio Code, and you then go to Debug your container…..oh. <!--more--> (I’m using Windows).</p>
+
+<p>Its not the most straight forward process I have found, if you are looking at getting this up and running. Firstly I didn’t figure this out on my own, the reason I’m blogging about it is because I meshed together the knowledge I had, plus these very informative posts:</p>
+
+<ul>
+  <li><a href="http://blog.jonathanchannon.com/2017/06/07/debugging-netcore-docker/">Jonathan Channon</a></li>
+  <li><a href="https://www.richard-banks.org/2018/07/debugging-core-in-docker.html">Richard Banks</a></li>
+</ul>
+
+<p>It was the above two posts that glued it together for me.  Have a good read of those as well. Before we go any further, just to confirm these instructions are for <em>Visual Studio Code</em> and <em>Linux Containers</em> using <em>Docker Compose</em>, I’m not sure how this is set-up on Visual Studio. I’m presuming you have <em>VSCode</em>, <em>Docker</em> and <em>.NET Core SDK</em> installed. And you are using Linux Containers.</p>
+
+<h2 id="dockerfile">DockerFile</h2>
+
+<p>Firstly lets look at my multi-staged (Multiple <code class="highlighter-rouge">FROM</code>) Dockerfile for building my project.</p>
+
+<h3 id="1st-stage-build">1st Stage Build</h3>
+
+<p>The first part of the Dockerfile <code class="highlighter-rouge">build-env</code> stage, takes an <code class="highlighter-rouge">ARG</code> of <code class="highlighter-rouge">buildconfig</code>, which controls how the <code class="highlighter-rouge">dotnet publish</code> is configured. And yes I know, I have a todo item to refactor the if/else to just pass the <code class="highlighter-rouge">buildconfig</code> as a <code class="highlighter-rouge">-c</code> value.</p>
+
+<h3 id="2nd-stage-run">2nd Stage Run</h3>
+
+<p>So the 1st stage handled the build, the 2nd handles the running of the Web API project. As you can see, there is a <code class="highlighter-rouge">Debug</code> switch again, to install some dependencies when running in <code class="highlighter-rouge">Debug</code>. Ignore the <strong>mongo</strong> installs, it is the <em>vsdbg</em> installation We are interested in.</p>
+
+<p><code class="highlighter-rouge">curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l</code></p>
+
+<blockquote>
+
+  <p>The debugger platform has been expanded between Visual Studio 2017 15.3 and
+previous versions of Visual Studio. Visual Studio can now communicate using
+the debug adapter protocol which is used by Visual Studio, Visual Studio Code
+and Visual Studio for Mac. This protocol is now used for debugging
+cross-platform .NET Core applications.</p>
+
+  <p><a href="https://github.com/Microsoft/MIEngine/wiki/Offroad-Debugging-of-.NET-Core-on-Linux---OSX-from-Visual-Studio">Source</a></p>
+</blockquote>
+
+<p>So vsdbg is installed <strong>into</strong> the container to allow remote debugging from your host machine using Visual Studio Code.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">FROM microsoft/dotnet:2.2-sdk AS build-env</span>
+<span class="s">ARG buildconfig</span>
+<span class="s">WORKDIR /app</span>
+<span class="s">COPY ServiceApp.WebApi.csproj .</span>
+<span class="s">RUN dotnet restore</span>
+<span class="s">COPY . .</span>
+<span class="s">RUN if [ "${buildconfig}" = "Debug" ]; then \</span>
+        <span class="s">dotnet publish -o /publish -c Debug; \</span>
+    <span class="s">else \</span>
+        <span class="s">dotnet publish -o /publish -c Release; \</span>
+    <span class="s">fi</span>
+
+<span class="s">FROM microsoft/dotnet:2.2-aspnetcore-runtime</span>
+<span class="s">ARG buildconfig</span>
+<span class="s">ENV DEBIAN_FRONTEND noninteractive</span>
+<span class="s">WORKDIR /publish</span>
+<span class="s">COPY --from=build-env /publish .</span>
+<span class="s">RUN if [ "${buildconfig}" = "Debug" ]; then \</span>
+        <span class="s">apt-get update &amp;&amp; \</span>
+        <span class="s">apt-get install -y --no-install-recommends apt-utils &amp;&amp; \</span>
+        <span class="s">apt-get install curl unzip procps mongodb -y &amp;&amp; \</span>
+        <span class="s">curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l /publish/vsdbg; \</span>
+     <span class="s">else \</span>
+        <span class="s">echo "*Whistling*"; \</span>
+    <span class="s">fi</span>
+<span class="s">ENV DEBIAN_FRONTEND teletype</span>
+<span class="s">ENTRYPOINT [ "dotnet","ServiceApp.WebApi.dll" ]</span>
+</code></pre></div></div>
+
+<h2 id="launch-task-configuration-for-visual-studio-code">Launch Task Configuration for Visual Studio Code</h2>
+
+<p>So this was the bit I struggled with, to the point I <a href="https://github.com/OmniSharp/omnisharp-vscode/issues/2724">logged a Github Issue</a> and subsequently had a light bulb moment afterwards!</p>
+
+<p>Both Jonathan and Richards work and investigations for their posts, again helped tenfold.</p>
+
+<p>Important bits are the <code class="highlighter-rouge">sourceFileMap</code> which map your projects code to the binaries in the Container. The <em>/app</em> in reference in mine, relates to the <em>/app</em> directory declared in the Dockerfile.</p>
+
+<p>The other important snippet is the <code class="highlighter-rouge">debuggerPath</code> option. This is the directory where vsdbg has been installed within your Container. You can set different directories within your <code class="highlighter-rouge">curl</code> command in the Dockerfile if you so wish.</p>
+
+<p>Lastly, note the Container name of <code class="highlighter-rouge">webapi_debug</code>, I set this up in the relevant compose file.</p>
+
+<p>The below will live in a <code class="highlighter-rouge">launch.json</code> in your <code class="highlighter-rouge">.vscode</code> directory. If configured correctly you should get a nice launch icon:</p>
+
+<p><img src="/assets/img/posts/debug-vscode-docker.png" alt="icon" /></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Attach to webapi (Docker)"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"coreclr"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"request"</span><span class="p">:</span><span class="w"> </span><span class="s2">"attach"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"sourceFileMap"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"/app"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${workspaceFolder}/src/api"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"processId"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"${command:pickRemoteProcess}"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"pipeTransport"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"debuggerPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/publish/vsdbg/vsdbg"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"pipeProgram"</span><span class="p">:</span><span class="w"> </span><span class="s2">"docker"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"pipeCwd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${workspaceFolder}/src/api"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"quoteArgs"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"pipeArgs"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"exec"</span><span class="p">,</span><span class="s2">"-i"</span><span class="p">,</span><span class="w"> </span><span class="s2">"webapi_debug"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="composing">Composing</h2>
+
+<p>Because I’m using separate Docker containers for <em>MongoDB</em> and <em>Identity Server</em> I use <code class="highlighter-rouge">docker-compose</code> to knit together my containers.</p>
+
+<p><strong>Note:</strong> I’m planning on doing a Identity Server post next on my experiences in getting that set-up.</p>
+
+<p>The below is from my <code class="highlighter-rouge">docker-compose.dev.yml</code> file.</p>
+
+<p>So the container with the interesting configurations is <code class="highlighter-rouge">webapi</code> which is my ASP.NET Core Web API project.  As you can see I set the container name to <code class="highlighter-rouge">webapi_debug</code> is set. As I mentioned before, the launch task needs that to remote into that particular container.</p>
+
+<p>You can also see I mount my Source Code directory from my <strong>host</strong> Windows machine using <code class="highlighter-rouge">volumes</code> using a relative path to my source code directory (<em>../api</em>) to <em>:/app</em>, allowing us, when a breakpoint is hit, for the code to be shown. If you configure this bit wrong, you will get the following error when the breakpoint is thrown:</p>
+
+<p><img src="/assets/img/posts/not-found-debug.png" alt="file-not-found" /></p>
+
+<p>The other interesting config points, are the <strong>ASPNETCORE_</strong>* environment variables for <code class="highlighter-rouge">Development</code> and the <code class="highlighter-rouge">buildconfig</code> argument of <code class="highlighter-rouge">Debug</code>, which as we learnt previously, is passed into the <code class="highlighter-rouge">Dockerfile</code> and used.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s2">"</span><span class="s">3"</span>
+<span class="na">services</span><span class="pi">:</span>
+  <span class="na">identity</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">garfbradaz/serviceident:develop</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">identity</span>
+    <span class="na">build</span><span class="pi">:</span>
+      <span class="na">args</span><span class="pi">:</span>
+        <span class="na">buildconfig</span><span class="pi">:</span> <span class="s">Debug</span>
+      <span class="na">context</span><span class="pi">:</span> <span class="s">../quickidentity</span>
+      <span class="na">dockerfile</span><span class="pi">:</span> <span class="s">Dockerfile</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">../quickidentity:/app2</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">ASPNETCORE_ENVIRONMENT=Development</span>
+      <span class="pi">-</span> <span class="s">ASPNETCORE_URLS=http://identity:5002</span>  
+      <span class="pi">-</span> <span class="s">AuthorityUrl=http://identity:5002</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">5002:5002"</span>
+  <span class="na">webapi</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">garfbradaz/serviceapp:develop</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">webapi_debug</span>
+    <span class="na">build</span><span class="pi">:</span>
+      <span class="na">args</span><span class="pi">:</span>
+        <span class="na">buildconfig</span><span class="pi">:</span> <span class="s">Debug</span>
+      <span class="na">context</span><span class="pi">:</span> <span class="s">../api</span>
+      <span class="na">dockerfile</span><span class="pi">:</span> <span class="s">Dockerfile</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">../api:/app</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">ASPNETCORE_ENVIRONMENT=Development</span>
+      <span class="pi">-</span> <span class="s">ASPNETCORE_URLS=http://+:5001</span>
+      <span class="pi">-</span> <span class="s">AuthorityUrl=http://identity:5002</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">5001:5001"</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">mongodb</span>
+      <span class="pi">-</span> <span class="s">identity</span>
+  <span class="na">mongodb</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">mongo:latest</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">mongodb</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">27017:27017"</span>
+</code></pre></div></div>
+
+<h2 id="running">Running</h2>
+
+<p>So put this all together you can run your containers using the Compose:</p>
+
+<p><code class="highlighter-rouge">docker-compose -f docker-compose.dev.yml up -d --build</code></p>
+
+<p>Set a breakpoint in your code (Example I set in my Controller), and run your debug task in <em>Visual Studio Code</em>. This will ask you to pick your process for your <code class="highlighter-rouge">dotnet</code> code. Then when the breakpoint is hit,  you can inspect it as normal.</p>
+
+<p>I find that it can hang and take half a minute sometimes for the debug session to initiate, so bear with it.</p>
+
+<p>Anyway I hope this helps someone, and a massive thank you to <a href="https://twitter.com/jchannon">Jonathan</a> and <a href="https://twitter.com/rbanks54">Richard</a>.</p>
+
+
+
+
+    <hr>
+<span>
+   <div>
+      
+      <div>
+         <h3> Gareth Bradley &nbsp;
+           
+              <a href="garfbradaz" class="icon fa-twitter"><span class="label">Twitter</span></a> 
+            
+          </h3>
+      </div>
+   </div>
+   Lover of tech, running and Guinness
+</span>
+<br>
+
+
+
+
+
+
+      </section>
+      <footer>
+        
+        <p>This project is maintained by <a href="http://github.com/garfbradaz">garfbradaz</a></p>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/assets/js/scale.fix.js"></script>
+    <script src="/assets/js/matrix.js"></script>
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-130935873-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    
+  </body>
+</html>
