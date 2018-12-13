@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+<loc>https://garfbradaz.github.io/blog/2018/07/07/Arise-New-Blog.html</loc>
+<lastmod>2018-07-07T00:00:00+01:00</lastmod>
+</url>
+<url>
+<loc>https://garfbradaz.github.io/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux.html</loc>
+<lastmod>2018-12-12T00:00:00+00:00</lastmod>
+</url>
+<url>
+<loc>https://garfbradaz.github.io/blog/2018/12/13/debug-dotnet-core-in-docker.html</loc>
+<lastmod>2018-12-13T00:00:00+00:00</lastmod>
+</url>
+<url>
+<loc>https://garfbradaz.github.io/about</loc>
+</url>
+<url>
+<loc>https://garfbradaz.github.io/blog.html</loc>
+</url>
+<url>
+<loc>https://garfbradaz.github.io/</loc>
+</url>
+<url>
+<loc>https://garfbradaz.github.io/OLD_README.html</loc>
+</url>
+</urlset>
