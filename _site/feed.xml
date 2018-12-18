@@ -1,4 +1,106 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://garfbradaz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://garfbradaz.github.io/" rel="alternate" type="text/html" /><updated>2018-12-13T21:29:24+00:00</updated><id>https://garfbradaz.github.io/feed.xml</id><title type="html">Gareth Bradleys Blog</title><subtitle>garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.</subtitle><entry><title type="html">Debug Dotnet Core In Docker</title><link href="https://garfbradaz.github.io/blog/2018/12/13/debug-dotnet-core-in-docker.html" rel="alternate" type="text/html" title="Debug Dotnet Core In Docker" /><published>2018-12-13T00:00:00+00:00</published><updated>2018-12-13T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/13/debug-dotnet-core-in-docker</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/13/debug-dotnet-core-in-docker.html">&lt;h2 id=&quot;debugging-aspnet-core-in-a-linux-docker-with-visual-studio-code&quot;&gt;Debugging ASP.NET Core in a Linux Docker with Visual Studio Code&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-12-18T08:26:42+00:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Gareth Bradleys Blog</title><subtitle>garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.</subtitle><entry><title type="html">Episode 1 Json Api Dotnet Core Docker</title><link href="http://localhost:4000/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html" rel="alternate" type="text/html" title="Episode 1 Json Api Dotnet Core Docker" /><published>2018-12-18T00:00:00+00:00</published><updated>2018-12-18T00:00:00+00:00</updated><id>http://localhost:4000/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker</id><content type="html" xml:base="http://localhost:4000/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html">&lt;h2 id=&quot;inspiration&quot;&gt;Inspiration&lt;/h2&gt;
+
+&lt;p&gt;There is a series on &lt;a href=&quot;https://dev.o&quot;&gt;dev.to&lt;/a&gt; that I have followed by &lt;a href=&quot;https://dev.to/nathanabland&quot;&gt;Nathan Bland&lt;/a&gt; who has recorded as series of videos around creating a JSON API, using &lt;em&gt;Node.js&lt;/em&gt;, &lt;em&gt;docker&lt;/em&gt; and &lt;em&gt;Express&lt;/em&gt;. &lt;!--more--&gt;&lt;/p&gt;
+
+&lt;p&gt;I liked the idea around this, so I’m going to do the same, but in a blog style, but replacing &lt;em&gt;Node.js&lt;/em&gt; and &lt;em&gt;Express&lt;/em&gt; with &lt;em&gt;ASP.NET Core WebAPI&lt;/em&gt;. I also want to use a MongoDB as a the backend.&lt;/p&gt;
+
+&lt;h2 id=&quot;set-the-scene&quot;&gt;Set the Scene&lt;/h2&gt;
+
+&lt;p&gt;The API itself will be for a &lt;em&gt;Book Shop Chain&lt;/em&gt; who want to expose their stores and titles via a public RESTful service for other companies to use. This can be used for stock lookups and to see which stores have stock available to sell.&lt;/p&gt;
+
+&lt;p&gt;Here are some example Epics to show the shape of the API needed:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;As a &lt;em&gt;book store&lt;/em&gt;
+I can &lt;em&gt;add&lt;/em&gt; our &lt;em&gt;store&lt;/em&gt; to the database
+&lt;em&gt;So&lt;/em&gt; we can be accessible&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;As a &lt;em&gt;book store&lt;/em&gt;
+I can &lt;em&gt;add&lt;/em&gt; our &lt;em&gt;inventory&lt;/em&gt; to our database
+&lt;em&gt;So&lt;/em&gt; we can expose our inventory&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;As a &lt;em&gt;book store&lt;/em&gt;
+We can &lt;em&gt;update&lt;/em&gt; a books stock level
+&lt;em&gt;For&lt;/em&gt; an accurate stock level&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;As a &lt;em&gt;API consumer&lt;/em&gt;
+I can look up a &lt;em&gt;stores address&lt;/em&gt;
+&lt;em&gt;So&lt;/em&gt; we know where to buy a &lt;em&gt;book&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;As a &lt;em&gt;API consumer&lt;/em&gt;
+I can look up a &lt;em&gt;book&lt;/em&gt;
+&lt;em&gt;So&lt;/em&gt; we can get a &lt;em&gt;list&lt;/em&gt; of &lt;em&gt;stores&lt;/em&gt; who sell a
+&lt;em&gt;book&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;As &lt;em&gt;book store IT Security&lt;/em&gt;
+We can add &lt;em&gt;API Keys&lt;/em&gt; to the API
+&lt;em&gt;For&lt;/em&gt; API Consumers to use when querying the API&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;what-to-expect&quot;&gt;What to expect&lt;/h2&gt;
+
+&lt;p&gt;My plan is to release weekly blog posts covering in a similar fashion like Nathan’s:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Setting up your .NET Core Project Structure.&lt;/li&gt;
+  &lt;li&gt;Setting up docker environment using docker-compose.&lt;/li&gt;
+  &lt;li&gt;Modelling API JSON back end using Mongo.&lt;/li&gt;
+  &lt;li&gt;Modelling API using Swagger.&lt;/li&gt;
+  &lt;li&gt;Unit Tests with Xunit.&lt;/li&gt;
+  &lt;li&gt;Integration Tests with Postman.&lt;/li&gt;
+  &lt;li&gt;Skeleton Book Store API (Routes etc).&lt;/li&gt;
+  &lt;li&gt;Skeleton Inventory API (Routes etc).&lt;/li&gt;
+  &lt;li&gt;Securing your API.&lt;/li&gt;
+  &lt;li&gt;Data validation.&lt;/li&gt;
+  &lt;li&gt;Pagination for large data queries.&lt;/li&gt;
+  &lt;li&gt;Filter and Search.&lt;/li&gt;
+  &lt;li&gt;Hooking up to Azure Dev Ops for Build and Release Pipeline.&lt;/li&gt;
+  &lt;li&gt;Publisher Swagger Documentation on Github.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I will post any code on Github as well.&lt;/p&gt;
+
+&lt;h2 id=&quot;start-at-zero&quot;&gt;Start at Zero&lt;/h2&gt;
+
+&lt;p&gt;So before starting cracking on with this, make sure your environment is set up. Because this is &lt;em&gt;.NET Core&lt;/em&gt;, this is cross platform, so if you own a Mac or Linux box, feel free to join in. I’m going to be building this on a &lt;em&gt;Surface Book&lt;/em&gt;, but I will try to be a good Xpat-Citizen and test across environments.&lt;/p&gt;
+
+&lt;p&gt;Please make sure the following is installed:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://dotnet.microsoft.com/download&quot;&gt;Dotnet Core &lt;/a&gt; - I’m currently using 2.2.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.docker.com/get-started&quot;&gt;Docker&lt;/a&gt; - You will need to also create a login for &lt;a href=&quot;https://hub.docker.com/signup&quot;&gt;Docker Hub&lt;/a&gt; if you do not have one.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.microsoft.com/en-gb/powershell/scripting/overview?view=powershell-6&quot;&gt;Powershell Core&lt;/a&gt; - PowerShell Core is cross-platform and runs on Windows, Linux, and MacOS while the old one runs on Windows only(CLI). There are options to install on the OS of choice.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We wont need to install Mongo as we will be running it using &lt;em&gt;Docker&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;ide&quot;&gt;IDE&lt;/h2&gt;
+
+&lt;p&gt;I will be using &lt;em&gt;Visual Studio Code&lt;/em&gt; for cross platform .NET Core support. I use a bunch of extension which I have put here:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://gist.github.com/garfbradaz/be010080df076d19892bf4ec71127b53&quot;&gt;https://gist.github.com/garfbradaz/be010080df076d19892bf4ec71127b53&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;You can import these using the following &lt;em&gt;Settings Sync&lt;/em&gt; extension on the marketplace:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=Shan.code-settings-sync&quot;&gt;https://marketplace.visualstudio.com/items?itemName=Shan.code-settings-sync&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;If you already use &lt;em&gt;VSCode&lt;/em&gt;, you may just want to find the &lt;em&gt;C#&lt;/em&gt;, &lt;em&gt;Docker&lt;/em&gt; &lt;em&gt;GitLens&lt;/em&gt; and &lt;em&gt;.NET Core Test Explorer&lt;/em&gt; &lt;a href=&quot;https://code.visualstudio.com/docs/editor/extension-gallery&quot;&gt;extensions&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt;My list contains extensions like &lt;em&gt;Jekyll&lt;/em&gt; support which you wont need for this.&lt;/p&gt;
+
+&lt;h2 id=&quot;next-time&quot;&gt;Next time&lt;/h2&gt;
+
+&lt;p&gt;We will create the &lt;em&gt;ASP.NET Core WebAPI&lt;/em&gt; template, set up the project structure. Join me next time!.&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><category term="api" /><summary type="html">Inspiration There is a series on dev.to that I have followed by Nathan Bland who has recorded as series of videos around creating a JSON API, using Node.js, docker and Express.</summary></entry><entry><title type="html">Debug Dotnet Core In Docker</title><link href="http://localhost:4000/blog/2018/12/13/debug-dotnet-core-in-docker.html" rel="alternate" type="text/html" title="Debug Dotnet Core In Docker" /><published>2018-12-13T00:00:00+00:00</published><updated>2018-12-13T00:00:00+00:00</updated><id>http://localhost:4000/blog/2018/12/13/debug-dotnet-core-in-docker</id><content type="html" xml:base="http://localhost:4000/blog/2018/12/13/debug-dotnet-core-in-docker.html">&lt;h2 id=&quot;debugging-aspnet-core-in-a-linux-docker-with-visual-studio-code&quot;&gt;Debugging ASP.NET Core in a Linux Docker with Visual Studio Code&lt;/h2&gt;
 
 &lt;p&gt;So, you have started using Docker for your .NET Core applications - awesome news. You are using Linux Containers, and Visual Studio Code, and you then go to Debug your container…..oh. &lt;!--more--&gt; (I’m using Windows).&lt;/p&gt;
 
@@ -173,7 +275,7 @@ cross-platform .NET Core applications.&lt;/p&gt;
 
 &lt;p&gt;I find that it can hang and take half a minute sometimes for the debug session to initiate, so bear with it.&lt;/p&gt;
 
-&lt;p&gt;Anyway I hope this helps someone, and a massive thank you to &lt;a href=&quot;https://twitter.com/jchannon&quot;&gt;Jonathan&lt;/a&gt; and &lt;a href=&quot;https://twitter.com/rbanks54&quot;&gt;Richard&lt;/a&gt;.&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><summary type="html">Debugging ASP.NET Core in a Linux Docker with Visual Studio Code So, you have started using Docker for your .NET Core applications - awesome news. You are using Linux Containers, and Visual Studio Code, and you then go to Debug your container…..oh.</summary></entry><entry><title type="html">Setting Up Github Pages Jekyll And Using Windows Subsystem For Linux</title><link href="https://garfbradaz.github.io/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux.html" rel="alternate" type="text/html" title="Setting Up Github Pages Jekyll And Using Windows Subsystem For Linux" /><published>2018-12-12T00:00:00+00:00</published><updated>2018-12-12T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux.html">&lt;h2 id=&quot;setting-up-github-pages-jekyll-and-using-windows-subsystem-for-linux&quot;&gt;Setting up Github Pages, Jekyll and using Windows Subsystem for Linux&lt;/h2&gt;
+&lt;p&gt;Anyway I hope this helps someone, and a massive thank you to &lt;a href=&quot;https://twitter.com/jchannon&quot;&gt;Jonathan&lt;/a&gt; and &lt;a href=&quot;https://twitter.com/rbanks54&quot;&gt;Richard&lt;/a&gt;.&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><summary type="html">Debugging ASP.NET Core in a Linux Docker with Visual Studio Code So, you have started using Docker for your .NET Core applications - awesome news. You are using Linux Containers, and Visual Studio Code, and you then go to Debug your container…..oh.</summary></entry><entry><title type="html">Setting Up Github Pages Jekyll And Using Windows Subsystem For Linux</title><link href="http://localhost:4000/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux.html" rel="alternate" type="text/html" title="Setting Up Github Pages Jekyll And Using Windows Subsystem For Linux" /><published>2018-12-12T00:00:00+00:00</published><updated>2018-12-12T00:00:00+00:00</updated><id>http://localhost:4000/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux</id><content type="html" xml:base="http://localhost:4000/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux.html">&lt;h2 id=&quot;setting-up-github-pages-jekyll-and-using-windows-subsystem-for-linux&quot;&gt;Setting up Github Pages, Jekyll and using Windows Subsystem for Linux&lt;/h2&gt;
 
 &lt;p&gt;The 1st &lt;em&gt;how to&lt;/em&gt; for setting up the blog and tools needed to edit it. I’m a Windows fan (I love my Surface devices), but I’m also starting to appreciate Linux &lt;!--more--&gt;, so this is a perfect opportunity to set up my Surface Book to use &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/wsl/faq&quot;&gt;Windows Subsystem for Linux&lt;/a&gt;, which allows you command line access to Linux. I’m assured this is not a virtual machine, but a &lt;a href=&quot;https://blogs.msdn.microsoft.com/wsl/2016/04/22/windows-subsystem-for-linux-overview/&quot;&gt;syscall mapping between Windows and Linux itself&lt;/a&gt;, to actual Linux binaries themselves.&lt;/p&gt;
 
@@ -499,7 +601,7 @@ git push origin
 
 &lt;p&gt;&lt;a href=&quot;https://jekyllrb.com/docs/installation/ubuntu/&quot;&gt;Jekyll Docs - Ubuntu&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;https://jekyllrb.com/docs/&quot;&gt;Jekyll Docs&lt;/a&gt;&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="jekyll" /><category term="release-notes" /><category term="how-to" /><summary type="html">Setting up Github Pages, Jekyll and using Windows Subsystem for Linux The 1st how to for setting up the blog and tools needed to edit it. I’m a Windows fan (I love my Surface devices), but I’m also starting to appreciate Linux</summary></entry><entry><title type="html">Arise New Blog</title><link href="https://garfbradaz.github.io/blog/2018/07/07/Arise-New-Blog.html" rel="alternate" type="text/html" title="Arise New Blog" /><published>2018-07-07T00:00:00+01:00</published><updated>2018-07-07T00:00:00+01:00</updated><id>https://garfbradaz.github.io/blog/2018/07/07/Arise-New-Blog</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/07/07/Arise-New-Blog.html">&lt;h2 id=&quot;its-alive&quot;&gt;It’s alive!&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://jekyllrb.com/docs/&quot;&gt;Jekyll Docs&lt;/a&gt;&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="jekyll" /><category term="release-notes" /><category term="how-to" /><summary type="html">Setting up Github Pages, Jekyll and using Windows Subsystem for Linux The 1st how to for setting up the blog and tools needed to edit it. I’m a Windows fan (I love my Surface devices), but I’m also starting to appreciate Linux</summary></entry><entry><title type="html">Arise New Blog</title><link href="http://localhost:4000/blog/2018/12/07/Arise-New-Blog.html" rel="alternate" type="text/html" title="Arise New Blog" /><published>2018-12-07T00:00:00+00:00</published><updated>2018-12-07T00:00:00+00:00</updated><id>http://localhost:4000/blog/2018/12/07/Arise-New-Blog</id><content type="html" xml:base="http://localhost:4000/blog/2018/12/07/Arise-New-Blog.html">&lt;h2 id=&quot;its-alive&quot;&gt;It’s alive!&lt;/h2&gt;
 
 &lt;p&gt;I have wanted to move &lt;a href=&quot;https://mywebanecdotes.com/&quot;&gt;my current&lt;/a&gt; off Wordpress for sometime, &lt;!--more--&gt;, but time has always been a factor. As a developer I find myself living within &lt;em&gt;Visual Studio Code&lt;/em&gt;, so I decided to set up a blog which can:&lt;/p&gt;
 
