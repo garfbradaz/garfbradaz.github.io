@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>http://localhost:4000/blog/2018/12/07/Arise-New-Blog.html</loc>
+<loc>https://garfbradaz.github.io/blog/2018/12/07/Arise-New-Blog.html</loc>
 <lastmod>2018-12-07T00:00:00+00:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux.html</loc>
+<loc>https://garfbradaz.github.io/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux.html</loc>
 <lastmod>2018-12-12T00:00:00+00:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/blog/2018/12/13/debug-dotnet-core-in-docker.html</loc>
+<loc>https://garfbradaz.github.io/blog/2018/12/13/debug-dotnet-core-in-docker.html</loc>
 <lastmod>2018-12-13T00:00:00+00:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html</loc>
+<loc>https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html</loc>
 <lastmod>2018-12-18T00:00:00+00:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/about</loc>
+<loc>https://garfbradaz.github.io/about</loc>
 </url>
 <url>
-<loc>http://localhost:4000/blog.html</loc>
+<loc>https://garfbradaz.github.io/blog.html</loc>
 </url>
 <url>
-<loc>http://localhost:4000/</loc>
+<loc>https://garfbradaz.github.io/</loc>
 </url>
 </urlset>
