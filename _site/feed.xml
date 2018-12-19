@@ -1,4 +1,88 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://garfbradaz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://garfbradaz.github.io/" rel="alternate" type="text/html" /><updated>2018-12-18T08:43:45+00:00</updated><id>https://garfbradaz.github.io/feed.xml</id><title type="html">Gareth Bradleys Blog</title><subtitle>garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.</subtitle><entry><title type="html">Episode 1 Json Api Dotnet Core Docker</title><link href="https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html" rel="alternate" type="text/html" title="Episode 1 Json Api Dotnet Core Docker" /><published>2018-12-18T00:00:00+00:00</published><updated>2018-12-18T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html">&lt;h2 id=&quot;inspiration&quot;&gt;Inspiration&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://garfbradaz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://garfbradaz.github.io/" rel="alternate" type="text/html" /><updated>2018-12-19T08:38:57+00:00</updated><id>https://garfbradaz.github.io/feed.xml</id><title type="html">Gareth Bradleys Blog</title><subtitle>garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.</subtitle><entry><title type="html">Episode 2 Json Api Dotnet Core Docker Project Structure</title><link href="https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html" rel="alternate" type="text/html" title="Episode 2 Json Api Dotnet Core Docker   Project Structure" /><published>2018-12-19T00:00:00+00:00</published><updated>2018-12-19T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker---Project-Structure</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html">&lt;h2 id=&quot;previously-on-decoding&quot;&gt;Previously on Decoding&lt;/h2&gt;
+
+&lt;p&gt;In &lt;a href=&quot;/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html&quot;&gt;Episode 1&lt;/a&gt; I set the scene for what this series will contain. Today’s episode is simply on setting your &lt;em&gt;directory&lt;/em&gt; structure and creating the relevant projects. &lt;!--more--&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;directory-structure&quot;&gt;Directory Structure&lt;/h2&gt;
+
+&lt;p&gt;Firstly, create a directory structure for your &lt;em&gt;Source (src)&lt;/em&gt; where our &lt;strong&gt;dotnet projects&lt;/strong&gt; will be saved, &lt;em&gt;tests&lt;/em&gt; will hold our &lt;strong&gt;Unit&lt;/strong&gt; and &lt;strong&gt;Integration&lt;/strong&gt; tests and lastly, &lt;em&gt;docker&lt;/em&gt; which will hold our &lt;strong&gt;docker-compose&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    .
+    ├── src
+    ├── tests
+    ├── docker
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;src&quot;&gt;Src&lt;/h3&gt;
+
+&lt;p&gt;Change directory to &lt;em&gt;src&lt;/em&gt; and we will run the following &lt;em&gt;dotnet&lt;/em&gt; command to new up a Project. Before we move on any further and do that though, lets talk about &lt;em&gt;dotnet new&lt;/em&gt; for people who have not used it.&lt;/p&gt;
+
+&lt;p&gt;This command will create a dotnet project based off a default project template. You get a bunch of defaults with the SDK (&lt;a href=&quot;https://docs.microsoft.com/en-us/dotnet/core/tutorials/create-custom-template&quot;&gt;and you can create your own&lt;/a&gt;. Run the following:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dotnet new &lt;span class=&quot;nt&quot;&gt;--help&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This will give you a list of available templates you can use:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/posts/ep2-dotnet-new.png&quot; alt=&quot;templates&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Take note of the &lt;em&gt;short name&lt;/em&gt; as this is what we will be using next. So now we know what &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet new&lt;/code&gt; does, lets create the project:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dotnet new webapi &lt;span class=&quot;nt&quot;&gt;--auth&lt;/span&gt; Individual &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; api &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; BookStore.WebApi
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This will create a folder with the name &lt;em&gt;api&lt;/em&gt; and in it will create a new &lt;em&gt;webapi&lt;/em&gt; project using authentication (we will explore this more in a later episode). The project will be called &lt;em&gt;BookStore.WebApi&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Tip:&lt;/strong&gt; You can do a &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet new webapi --help&lt;/code&gt; and see all the available switches for that short name.&lt;/p&gt;
+
+&lt;p&gt;Your directory structure should look like this now:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    .
+    ├── src
+    |   ├── api
+    |       |
+    |       ├── BookStore.WebApi
+    ├── tests
+    ├── docker
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;tests&quot;&gt;Tests&lt;/h3&gt;
+
+&lt;p&gt;Change directory to the &lt;em&gt;tests&lt;/em&gt; folder. Firstly mainly create a &lt;em&gt;integration&lt;/em&gt; test folder. These will hold our &lt;strong&gt;Postman&lt;/strong&gt; tests (again for another episode). Secondly, we need to create our Unit Test project. I will be using &lt;em&gt;Xunit&lt;/em&gt;, but as you can see, there were a few different projects for testing when you did a &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet new --help&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dotnet new xunit &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; unit &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; BookStore.Tests
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Again this will create a &lt;em&gt;xunit&lt;/em&gt; project type within a folder called &lt;em&gt;unit&lt;/em&gt;. The project name will be &lt;em&gt;BookStore.Tests&lt;/em&gt;. Within the &lt;em&gt;integration&lt;/em&gt; folder just add an empty &lt;strong&gt;postman.json&lt;/strong&gt; file.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    .
+    ├── src
+    |   ├── api
+    |       |
+    |       ├── BookStore.WebApi
+    ├── tests
+    |   ├── integration
+    |   ├── unit
+    |       ├── BookStore.Tests
+    ├── docker
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;docker&quot;&gt;Docker&lt;/h3&gt;
+
+&lt;p&gt;Change directory to &lt;em&gt;docker&lt;/em&gt; folder and for now just create two empty files:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;docker-compose.yml&lt;/p&gt;
+
+  &lt;p&gt;docker-compose.dev.yml&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Yes you guessed it, this files will become apparent (and fatter) in a future episode.&lt;/p&gt;
+
+&lt;h2 id=&quot;next-time&quot;&gt;Next time&lt;/h2&gt;
+
+&lt;p&gt;So now we have set up our Project directory structure, we can move on to setting up our &lt;strong&gt;Docker&lt;/strong&gt; environment, using &lt;em&gt;Dockerfiles&lt;/em&gt; and &lt;em&gt;docker-compose&lt;/em&gt;. Join me next time.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Side note:&lt;/strong&gt; Episode 1 can be found on my &lt;a href=&quot;https://github.com/garfbradaz/webapi-episodes&quot;&gt;Github Repository&lt;/a&gt;&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><category term="api" /><summary type="html">Previously on Decoding In Episode 1 I set the scene for what this series will contain. Today’s episode is simply on setting your directory structure and creating the relevant projects.</summary></entry><entry><title type="html">Episode 1 Json Api Dotnet Core Docker</title><link href="https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html" rel="alternate" type="text/html" title="Episode 1 Json Api Dotnet Core Docker" /><published>2018-12-18T00:00:00+00:00</published><updated>2018-12-18T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html">&lt;h2 id=&quot;inspiration&quot;&gt;Inspiration&lt;/h2&gt;
 
 &lt;p&gt;There is a series on &lt;a href=&quot;https://dev.o&quot;&gt;dev.to&lt;/a&gt; that I have followed by &lt;a href=&quot;https://dev.to/nathanabland&quot;&gt;Nathan Bland&lt;/a&gt; who has recorded as series of videos around creating a JSON API, using &lt;em&gt;Node.js&lt;/em&gt;, &lt;em&gt;docker&lt;/em&gt; and &lt;em&gt;Express&lt;/em&gt;. &lt;!--more--&gt;&lt;/p&gt;
 

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<link type="application/atom+xml" rel="alternate" href="https://garfbradaz.github.io/feed.xml" title="Gareth Bradleys Blog" />
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Episode 2 Json Api Dotnet Core Docker Project Structure | Gareth Bradleys Blog</title>
+<meta name="generator" content="Jekyll v3.7.4" />
+<meta property="og:title" content="Episode 2 Json Api Dotnet Core Docker Project Structure" />
+<meta name="author" content="gareth" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Previously on Decoding In Episode 1 I set the scene for what this series will contain. Today’s episode is simply on setting your directory structure and creating the relevant projects." />
+<meta property="og:description" content="Previously on Decoding In Episode 1 I set the scene for what this series will contain. Today’s episode is simply on setting your directory structure and creating the relevant projects." />
+<link rel="canonical" href="https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html" />
+<meta property="og:url" content="https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html" />
+<meta property="og:site_name" content="Gareth Bradleys Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-12-19T00:00:00+00:00" />
+<script type="application/ld+json">
+{"description":"Previously on Decoding In Episode 1 I set the scene for what this series will contain. Today’s episode is simply on setting your directory structure and creating the relevant projects.","author":{"@type":"Person","name":"gareth"},"@type":"BlogPosting","url":"https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://garfbradaz.github.io/assets/img/new.png"},"name":"gareth"},"headline":"Episode 2 Json Api Dotnet Core Docker Project Structure","dateModified":"2018-12-19T00:00:00+00:00","datePublished":"2018-12-19T00:00:00+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <link rel="stylesheet" href="/assets/css/matrix.css?v=">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130935873-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-130935873-1');
+    </script>
+    <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="https://garfbradaz.github.io/">Gareth Bradleys Blog</a></h1>
+        <nav>
+  
+    <a href="/" >
+      Home
+    </a>
+  
+    <a href="/about.html" >
+      About
+    </a>
+  
+    <a href="/blog.html" >
+      Blog
+    </a>
+  
+</nav>
+
+        
+          <img src="/assets/img/new.png" alt="Logo" />
+        
+
+        <p>garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.</p>
+
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <h1>Episode 2 Json Api Dotnet Core Docker   Project Structure</h1>
+<p>19 Dec 2018 - gareth - blog</p>
+
+<h2 id="previously-on-decoding">Previously on Decoding</h2>
+
+<p>In <a href="/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html">Episode 1</a> I set the scene for what this series will contain. Today’s episode is simply on setting your <em>directory</em> structure and creating the relevant projects. <!--more--></p>
+
+<h2 id="directory-structure">Directory Structure</h2>
+
+<p>Firstly, create a directory structure for your <em>Source (src)</em> where our <strong>dotnet projects</strong> will be saved, <em>tests</em> will hold our <strong>Unit</strong> and <strong>Integration</strong> tests and lastly, <em>docker</em> which will hold our <strong>docker-compose</strong>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    .
+    ├── src
+    ├── tests
+    ├── docker
+</code></pre></div></div>
+
+<h3 id="src">Src</h3>
+
+<p>Change directory to <em>src</em> and we will run the following <em>dotnet</em> command to new up a Project. Before we move on any further and do that though, lets talk about <em>dotnet new</em> for people who have not used it.</p>
+
+<p>This command will create a dotnet project based off a default project template. You get a bunch of defaults with the SDK (<a href="https://docs.microsoft.com/en-us/dotnet/core/tutorials/create-custom-template">and you can create your own</a>. Run the following:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dotnet new <span class="nt">--help</span>
+</code></pre></div></div>
+
+<p>This will give you a list of available templates you can use:</p>
+
+<p><img src="/assets/img/posts/ep2-dotnet-new.png" alt="templates" /></p>
+
+<p>Take note of the <em>short name</em> as this is what we will be using next. So now we know what <code class="highlighter-rouge">dotnet new</code> does, lets create the project:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dotnet new webapi <span class="nt">--auth</span> Individual <span class="nt">-o</span> api <span class="nt">-n</span> BookStore.WebApi
+</code></pre></div></div>
+
+<p>This will create a folder with the name <em>api</em> and in it will create a new <em>webapi</em> project using authentication (we will explore this more in a later episode). The project will be called <em>BookStore.WebApi</em>.</p>
+
+<p><strong>Tip:</strong> You can do a <code class="highlighter-rouge">dotnet new webapi --help</code> and see all the available switches for that short name.</p>
+
+<p>Your directory structure should look like this now:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    .
+    ├── src
+    |   ├── api
+    |       |
+    |       ├── BookStore.WebApi
+    ├── tests
+    ├── docker
+</code></pre></div></div>
+
+<h3 id="tests">Tests</h3>
+
+<p>Change directory to the <em>tests</em> folder. Firstly mainly create a <em>integration</em> test folder. These will hold our <strong>Postman</strong> tests (again for another episode). Secondly, we need to create our Unit Test project. I will be using <em>Xunit</em>, but as you can see, there were a few different projects for testing when you did a <code class="highlighter-rouge">dotnet new --help</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dotnet new xunit <span class="nt">-o</span> unit <span class="nt">-n</span> BookStore.Tests
+</code></pre></div></div>
+
+<p>Again this will create a <em>xunit</em> project type within a folder called <em>unit</em>. The project name will be <em>BookStore.Tests</em>. Within the <em>integration</em> folder just add an empty <strong>postman.json</strong> file.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    .
+    ├── src
+    |   ├── api
+    |       |
+    |       ├── BookStore.WebApi
+    ├── tests
+    |   ├── integration
+    |   ├── unit
+    |       ├── BookStore.Tests
+    ├── docker
+</code></pre></div></div>
+
+<h3 id="docker">Docker</h3>
+
+<p>Change directory to <em>docker</em> folder and for now just create two empty files:</p>
+
+<blockquote>
+  <p>docker-compose.yml</p>
+
+  <p>docker-compose.dev.yml</p>
+</blockquote>
+
+<p>Yes you guessed it, this files will become apparent (and fatter) in a future episode.</p>
+
+<h2 id="next-time">Next time</h2>
+
+<p>So now we have set up our Project directory structure, we can move on to setting up our <strong>Docker</strong> environment, using <em>Dockerfiles</em> and <em>docker-compose</em>. Join me next time.</p>
+
+<p><strong>Side note:</strong> Episode 1 can be found on my <a href="https://github.com/garfbradaz/webapi-episodes">Github Repository</a></p>
+
+
+
+
+    <hr>
+<span>
+   <div>
+      
+      <div>
+         <h3> Gareth Bradley  AKA garfbradaz &nbsp;
+           
+              <a href="garfbradaz" class="icon fa-twitter"><span class="label">Twitter</span></a> 
+            
+          </h3>
+      </div>
+   </div>
+   Lover of tech, running and Guinness
+</span>
+<br>
+
+
+
+
+
+
+      </section>
+      <footer>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/assets/js/scale.fix.js"></script>
+    <script src="/assets/js/matrix.js"></script>
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-130935873-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    
+  </body>
+</html>
