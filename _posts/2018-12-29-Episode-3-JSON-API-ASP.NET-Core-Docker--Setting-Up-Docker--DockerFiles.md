@@ -184,11 +184,11 @@ This command will run a `docker build`. The "." signifies you want to use the *D
 
 The first time you run this will take a while, because there will be no *cache entries* from previous builds for your layers. You can also see all the layers that are built from the Microsoft *base images* which are made up of layers also:
 
-![docker-net-layers](/assets/img/posts/docker-net-layers.png)
+![docker-net-layers](/assets/img/posts/docker-net-layers.PNG)
 
 If you run a `docker images` again you will now see your image has been built (plus the .NET Core Images):
 
-![dotnet-net-images](/assets/img/posts/dotnet-net-images.png)
+![dotnet-net-images](/assets/img/posts/dotnet-net-images.PNG)
 
 ### Run the Image as a Container
 
