@@ -51,7 +51,7 @@ disqus:
 
 - Add a reference to `comments.html` to your `posts.html`. Add the following to the bottom of the `posts.html` (or whatever your HTMl file is called):
 
-```liquid
+```
 {% include comments.html %}
 ```
 
