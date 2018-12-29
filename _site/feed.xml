@@ -1,4 +1,207 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://garfbradaz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://garfbradaz.github.io/" rel="alternate" type="text/html" /><updated>2018-12-19T08:38:57+00:00</updated><id>https://garfbradaz.github.io/feed.xml</id><title type="html">Gareth Bradleys Blog</title><subtitle>garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.</subtitle><entry><title type="html">Episode 2 Json Api Dotnet Core Docker Project Structure</title><link href="https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html" rel="alternate" type="text/html" title="Episode 2 Json Api Dotnet Core Docker   Project Structure" /><published>2018-12-19T00:00:00+00:00</published><updated>2018-12-19T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker---Project-Structure</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html">&lt;h2 id=&quot;previously-on-decoding&quot;&gt;Previously on Decoding&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://garfbradaz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://garfbradaz.github.io/" rel="alternate" type="text/html" /><updated>2018-12-29T08:50:04+00:00</updated><id>https://garfbradaz.github.io/feed.xml</id><title type="html">Gareth Bradleys Blog</title><subtitle>garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.</subtitle><entry><title type="html">Episode 3 Json Api Asp.net Core Docker Setting Up Docker Dockerfiles</title><link href="https://garfbradaz.github.io/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker-Setting-Up-Docker-DockerFiles.html" rel="alternate" type="text/html" title="Episode 3 Json Api Asp.net Core Docker  Setting Up Docker  Dockerfiles" /><published>2018-12-29T00:00:00+00:00</published><updated>2018-12-29T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker--Setting-Up-Docker--DockerFiles</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker-Setting-Up-Docker-DockerFiles.html">&lt;h2 id=&quot;previously-on-decoding&quot;&gt;Previously on Decoding&lt;/h2&gt;
+
+&lt;p&gt;In &lt;a href=&quot;/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html&quot;&gt;Episode 2&lt;/a&gt; I set up the project directory structure. Today’s episode is &lt;strong&gt;Docker Part 1: DockerFiles&lt;/strong&gt;. &lt;!--more--&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;lets-talk-about-docker&quot;&gt;Lets talk about Docker&lt;/h2&gt;
+
+&lt;p&gt;Firstly before we get into how to set up Docker, I want to get into bigging the big D up! Apart from &lt;em&gt;Visual Studio Code&lt;/em&gt; and &lt;em&gt;WSL&lt;/em&gt;, no other technology has transformed how I develop code in 2018. Yes there are pain points, but once you get through those, then your development experience starts (i dare say it) become a little more blissful.&lt;/p&gt;
+
+&lt;p&gt;I can now pull down pre-developed images of applications, databases, load balancers, webs servers, SDKs build tools, pixie dust (nic: testing you are still reading!), and use them like lego bricks, to build a system, &lt;em&gt;without&lt;/em&gt; installing the binaries on my machine.&lt;/p&gt;
+
+&lt;p&gt;Take this tutorial for example, apart from the .NET SDK installed for the IDE, &lt;em&gt;MongoDB&lt;/em&gt;, &lt;em&gt;nginx&lt;/em&gt; and the &lt;em&gt;dotnet runtime&lt;/em&gt; are all installed via images, for which I can build and throw away when finished. No installation needed on my local development (host) machine. Even SQL Server runs on Linux now, and has a Image to pull down.&lt;/p&gt;
+
+&lt;p&gt;This Lego Brick approach to building software now means I dont need to worry about installing all the tools on my machine, configure those tools and un-install when finished. I can package it all up in a &lt;em&gt;Dockerfile&lt;/em&gt; to use now, later or even on another machine, without polluting my host machine and slowing it down.&lt;/p&gt;
+
+&lt;h3 id=&quot;what-is-docker&quot;&gt;What is Docker?&lt;/h3&gt;
+
+&lt;p&gt;Docker is product that utilises a technology &lt;em&gt;containers&lt;/em&gt;, which have been around in Linux for a while. Containers are isolated/sandboxed processes, which only use the bare minimum binaries needed to run the application &lt;em&gt;within&lt;/em&gt; the container, including the file system. Unlike &lt;em&gt;Virtual Machine&lt;/em&gt; which run a whole operating system, and the bloat around it.&lt;/p&gt;
+
+&lt;p&gt;Now as I was writing this post, &lt;a href=&quot;https://twitter.com/dswersky&quot;&gt;Dave Swersky&lt;/a&gt;, wrote an awesome post on &lt;a href=&quot;https://dev.to/raygun/what-is-docker-and-why-is-it-so-popular-45c7&quot;&gt;What is Docker, and why is it so popular?&lt;/a&gt;. Check that out.&lt;/p&gt;
+
+&lt;h2 id=&quot;dockerfile&quot;&gt;Dockerfile&lt;/h2&gt;
+
+&lt;p&gt;If this is the first time you have used Docker, or you do not have it installed, check out dockers &lt;a href=&quot;https://www.docker.com/get-started&quot;&gt;getting started&lt;/a&gt; to start your journey. You will need to sign up to Docker Hub(https://hub.docker.com/) as well. Think as hub as the repository for Container Images you can access. Not just Dockers, but the communities as a whole. You may here the term &lt;em&gt;Container Registry&lt;/em&gt; for the Hub as well (You can set up your own private Registries on Azure for example).&lt;/p&gt;
+
+&lt;p&gt;So a couple of commands and terminology we need to clear up, which are useful now before moving forward.&lt;/p&gt;
+
+&lt;h3 id=&quot;help&quot;&gt;Help&lt;/h3&gt;
+
+&lt;p&gt;So the &lt;code class=&quot;highlighter-rouge&quot;&gt;docker&lt;/code&gt; command has a nice help facility, so if you want to see a list of docker commands:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker &lt;span class=&quot;nt&quot;&gt;--help&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;images&quot;&gt;Images&lt;/h3&gt;
+
+&lt;p&gt;A image is the package that includes everything needed to run your application, from the environment, code and configuration. You normally use other companies/communities/developers pre-built images from the hub or &lt;em&gt;base images&lt;/em&gt;, but you can &lt;a href=&quot;https://docs.docker.com/develop/develop-images/baseimages/&quot;&gt;create your own&lt;/a&gt; just as easily.&lt;/p&gt;
+
+&lt;p&gt;If you want to see which images you have on your host machine (your development PC/Mac), then run the following command:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker images &lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If this is all new, then nothing will be listed currently, but when we start building our &lt;em&gt;Dockerfile&lt;/em&gt;, we will come back to the output on what this means.&lt;/p&gt;
+
+&lt;h3 id=&quot;containers&quot;&gt;Containers&lt;/h3&gt;
+
+&lt;p&gt;The container is your image &lt;em&gt;running&lt;/em&gt; in a discrete process. You can have multiple containers running on your host machine. Again there is a command to see what containers are running:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker container &lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You can also use the short cut (One I personally use a lot):&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker ps
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;develop-first-dockerfile&quot;&gt;Develop first Dockerfile&lt;/h2&gt;
+
+&lt;p&gt;What is a Dockerfile then? Here is a good description from Docker &lt;a href=&quot;https://docs.docker.com/engine/reference/builder/#usage&quot;&gt;themselves&lt;/a&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Docker can build images automatically by reading the instructions from a Dockerfile. A Dockerfile is a text
+document that contains all the commands a user could call on the command line to assemble an image. Using docker
+build users can create an automated build that executes several command-line instructions in succession.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;To begin with, we will build our first Dockerfile to:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Compile our .NET Core Web API for the BookStore.&lt;/li&gt;
+  &lt;li&gt;Run our .NET Core Web API.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We call &lt;em&gt;Dockerfiles&lt;/em&gt; that do more than one thing, &lt;em&gt;multi-stage&lt;/em&gt; builds. They allow us to &lt;em&gt;build&lt;/em&gt; and &lt;em&gt;run&lt;/em&gt; without maintaining separate Dockerfiles (which was the case once upon a time). Because I don’t learn this stuff on my own, let me link to &lt;a href=&quot;https://blog.alexellis.io/mutli-stage-docker-builds/&quot;&gt;Alex Ellis&lt;/a&gt; talking more about this.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Future Post:&lt;/strong&gt; While I’m chatting about Alex, in the future I will be refactoring this &lt;strong&gt;BookStore.App&lt;/strong&gt; to use &lt;a href=&quot;https://www.openfaas.com/&quot;&gt;OpenFaaS&lt;/a&gt; an open source serverless architecture that &lt;em&gt;isn’t&lt;/em&gt; coupled to one particular cloud. I’m excited about this, as I have wanted to use this tech for a while now, I even have the Raspberry Pis to cluster…..&lt;/p&gt;
+
+&lt;p&gt;So, back to the matter at hand. Firstly we need to &lt;em&gt;change directory&lt;/em&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;src/api&lt;/code&gt; directory we set up in &lt;a href=&quot;/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html&quot;&gt;Episode 2&lt;/a&gt;. Just to recap we set up the following:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    .
+    ├── src
+    |   ├── api
+    |       |
+    |       ├── BookStore.WebApi.csproj
+    ├── tests
+    |   ├── integration
+    |   ├── unit
+    |       ├── BookStore.Tests.csproj
+    ├── docker
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then create a file called &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; in the root of &lt;code class=&quot;highlighter-rouge&quot;&gt;api&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    .
+    ├── src
+    |   ├── api
+    |       |
+    |       ├── BookStore.WebApi.csproj
+    |       ├── Dockerfile
+    ├── tests
+    |   ├── integration
+    |   ├── unit
+    |       ├── BookStore.Tests.csproj
+    ├── docker
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Add the following to the file:&lt;/p&gt;
+
+&lt;div class=&quot;language-dockerfile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; microsoft/dotnet:2.2-sdk AS build-env&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;WORKDIR&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; /app&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;COPY&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; BookStore.WebApi.csproj .&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;COPY&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; . .&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;dotnet publish &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; Release &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; /publish
+
+&lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; microsoft/dotnet:2.2-aspnetcore-runtime AS runtime-env&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;WORKDIR&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; /publish&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;EXPOSE&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; 5000&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;COPY&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; --from=build-env /publish .&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;ENTRYPOINT&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; [ &quot;dotnet&quot;,&quot;BookStore.WebApi.dll&quot; ]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If this is new to you, then let me explain the format on this file and what it means.&lt;/p&gt;
+
+&lt;h3 id=&quot;from&quot;&gt;FROM&lt;/h3&gt;
+
+&lt;p&gt;This statement sets the &lt;em&gt;base image&lt;/em&gt; created by Microsoft (or any organisation who has created an base image) and creates a new build stage (each &lt;code class=&quot;highlighter-rouge&quot;&gt;FROM&lt;/code&gt; creates a new stage). These images will live on a public repository like &lt;em&gt;hub.docker.com&lt;/em&gt;. So make sure you have logged in via &lt;em&gt;Docker Desktop&lt;/em&gt; otherwise the first build step will fail.&lt;/p&gt;
+
+&lt;p&gt;Having multiple &lt;code class=&quot;highlighter-rouge&quot;&gt;FROM&lt;/code&gt; denotes a multi-stage Dockerfile.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://hub.docker.com/r/microsoft/dotnet/&quot;&gt;microsoft/dotnet:2.2-sdk&lt;/a&gt; - SDK image. This base image is designed to allow you to build/publish using the &lt;em&gt;dotnet CLI&lt;/em&gt;. As you can see I’m using the 2.2 .NET Core Version (denoted the common tag name of &lt;strong&gt;:2.2-sdk&lt;/strong&gt;).&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://hub.docker.com/r/microsoft/dotnet/&quot;&gt;microsoft/dotnet:2.2-aspnetcore-runtime&lt;/a&gt; - Runtime image. This base image is designed to run a ASP.NET Core application using the &lt;em&gt;dotnet runtime&lt;/em&gt;. Again it follows the same format with denoting the dotnet version by the common tag of &lt;strong&gt;:2.2-aspnetcore-runtime&lt;/strong&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;workdir&quot;&gt;WORKDIR&lt;/h3&gt;
+
+&lt;p&gt;This statement will create a directory for the following statements will work in. If the directory exists, then the directory is just set to the value in &lt;code class=&quot;highlighter-rouge&quot;&gt;WORKDIR&lt;/code&gt;. In our case &lt;code class=&quot;highlighter-rouge&quot;&gt;/app&lt;/code&gt; is created by the command and &lt;code class=&quot;highlighter-rouge&quot;&gt;/publish&lt;/code&gt; is set to (as publish is created in the &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet publish&lt;/code&gt;).&lt;/p&gt;
+
+&lt;h3 id=&quot;copy&quot;&gt;COPY&lt;/h3&gt;
+
+&lt;p&gt;This statement will copy the files specified &lt;em&gt;into&lt;/em&gt; the containers file system (normally into the file system specified in &lt;code class=&quot;highlighter-rouge&quot;&gt;WORKDIR&lt;/code&gt;) from the host machine of the directory where the Dockerfile is placed. So in our instance, the &lt;code class=&quot;highlighter-rouge&quot;&gt;../src/api&lt;/code&gt; directory.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; We have two &lt;code class=&quot;highlighter-rouge&quot;&gt;COPY&lt;/code&gt; commands in the build stage of our Dockerfile context. We do this for the &lt;strong&gt;BookStore.WebApi.csproj&lt;/strong&gt; so that we have a build cache entry for this file, so if it hasn’t changed, we dont copy it on every build (reduces build times).  Also &lt;code class=&quot;highlighter-rouge&quot;&gt;COPY . .&lt;/code&gt; will copy everything else.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-Dockerfile&quot;&gt;COPY BookStore.WebApi.csproj .
+COPY . .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Our 2nd stage actually copies the output from &lt;code class=&quot;highlighter-rouge&quot;&gt;build-env&lt;/code&gt; &lt;strong&gt;/publish&lt;/strong&gt; directory into the next stage.&lt;/p&gt;
+
+&lt;h3 id=&quot;run&quot;&gt;RUN&lt;/h3&gt;
+
+&lt;p&gt;This statement will run a set of commands that will create another layer in your image and commit the results, which will form part of the container. It allows you to set up your container before running it.&lt;/p&gt;
+
+&lt;p&gt;Our example is the &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet publish&lt;/code&gt; will be &lt;code class=&quot;highlighter-rouge&quot;&gt;RUN&lt;/code&gt; as part of the &lt;code class=&quot;highlighter-rouge&quot;&gt;docker build&lt;/code&gt; instruction set, creating the binaries to use when we &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet&lt;/code&gt; using the published &lt;code class=&quot;highlighter-rouge&quot;&gt;.dll&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;entrypoint&quot;&gt;ENTRYPOINT&lt;/h3&gt;
+
+&lt;p&gt;This statement defines what is run when you &lt;code class=&quot;highlighter-rouge&quot;&gt;docker run&lt;/code&gt; and start the container. Our &lt;code class=&quot;highlighter-rouge&quot;&gt;ENTRYPOINT&lt;/code&gt; runs the &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet&lt;/code&gt; command using our published &lt;code class=&quot;highlighter-rouge&quot;&gt;.dll&lt;/code&gt;. You can pass more parameters into the &lt;code class=&quot;highlighter-rouge&quot;&gt;ENTRYPOINT&lt;/code&gt; command via &lt;code class=&quot;highlighter-rouge&quot;&gt;docker run&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Our multi-stage Dockerfile builds our source code in the first stage and copies the published output so that it is run using the &lt;em&gt;.NET Core Runetime&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;build-the-image&quot;&gt;Build the Image&lt;/h2&gt;
+
+&lt;p&gt;Now we have a Dockerfile, we can build this file into an &lt;em&gt;image&lt;/em&gt; which will be stored locally on our host. Make sure you are on the commandline of choice, and change directory to &lt;code class=&quot;highlighter-rouge&quot;&gt;../src/api&lt;/code&gt; and run the following command:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker build &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; garfbradaz/ep3-api &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This command will run a &lt;code class=&quot;highlighter-rouge&quot;&gt;docker build&lt;/code&gt;. The “.” signifies you want to use the &lt;em&gt;Dockerfile&lt;/em&gt; in the current directory and &lt;code class=&quot;highlighter-rouge&quot;&gt;-t garfbradaz/ep3-api&lt;/code&gt; is a parameter that will build an Image with a &lt;strong&gt;[-]t&lt;/strong&gt;ag name of &lt;em&gt;garfbradaz/ep3-api&lt;/em&gt;. You can replace this string with anything you want.&lt;/p&gt;
+
+&lt;p&gt;The first time you run this will take a while, because there will be no &lt;em&gt;cache entries&lt;/em&gt; from previous builds for your layers. You can also see all the layers that are built from the Microsoft &lt;em&gt;base images&lt;/em&gt; which are made up of layers also:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/posts/docker-net-layers.png&quot; alt=&quot;docker-net-layers&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;If you run a &lt;code class=&quot;highlighter-rouge&quot;&gt;docker images&lt;/code&gt; again you will now see your image has been built (plus the .NET Core Images):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/posts/dotnet-net-images.png&quot; alt=&quot;dotnet-net-images&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;run-the-image-as-a-container&quot;&gt;Run the Image as a Container&lt;/h3&gt;
+
+&lt;p&gt;So, we have created a &lt;em&gt;Dockerfile&lt;/em&gt; that includes the steps to build an image, which includes the resources needed to run the application within a &lt;em&gt;container&lt;/em&gt;. This is the magic, as we can run this image on any OS that supports Docker itself (If we are building &lt;em&gt;Linux&lt;/em&gt; containers).&lt;/p&gt;
+
+&lt;p&gt;So the following will run your container as isolated/sandboxed process:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run &lt;span class=&quot;nt&quot;&gt;--env&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ASPNETCORE_ENVIRONMENT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;Development &lt;span class=&quot;nt&quot;&gt;--env&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ASPNETCORE_URLS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://+:5000 &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 5000:5000 &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-it&lt;/span&gt;  garfbradaz/ep3-api
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This command will run your Container interactively (&lt;code class=&quot;highlighter-rouge&quot;&gt;-it&lt;/code&gt;), and override some environment variables (&lt;code class=&quot;highlighter-rouge&quot;&gt;--env&lt;/code&gt;); overriding port mapping to 5000 (&lt;code class=&quot;highlighter-rouge&quot;&gt;-p&lt;/code&gt;) and clean up the container with finished (&lt;code class=&quot;highlighter-rouge&quot;&gt;--rm&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;I use Powershell to validate the container is running fine, but you can use &lt;em&gt;postman&lt;/em&gt; (we explore setting this up in another chapter).&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;Invoke-RestMethod&lt;/span&gt; -Uri http://localhost:5000/api/values -Method &lt;span class=&quot;s1&quot;&gt;'Get'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This should fail with a 401 status, because we set up the &lt;code class=&quot;highlighter-rouge&quot;&gt;[Authorize]&lt;/code&gt; attribute against the &lt;code class=&quot;highlighter-rouge&quot;&gt;ValuesController.cs&lt;/code&gt;.  But at least this proves we are hitting the Web API running using Kestrel within the Container process.&lt;/p&gt;
+
+&lt;h3 id=&quot;next-time&quot;&gt;Next time&lt;/h3&gt;
+
+&lt;p&gt;We will be exploring &lt;code class=&quot;highlighter-rouge&quot;&gt;docker compose&lt;/code&gt; to allow us to run and knit together multiple containers together so we can interact with MongoDB for example.&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><category term="api" /><summary type="html">Previously on Decoding In Episode 2 I set up the project directory structure. Today’s episode is Docker Part 1: DockerFiles.</summary></entry><entry><title type="html">Episode 2 Json Api Dotnet Core Docker Project Structure</title><link href="https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html" rel="alternate" type="text/html" title="Episode 2 Json Api Dotnet Core Docker   Project Structure" /><published>2018-12-19T00:00:00+00:00</published><updated>2018-12-19T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker---Project-Structure</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html">&lt;h2 id=&quot;previously-on-decoding&quot;&gt;Previously on Decoding&lt;/h2&gt;
 
 &lt;p&gt;In &lt;a href=&quot;/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html&quot;&gt;Episode 1&lt;/a&gt; I set the scene for what this series will contain. Today’s episode is simply on setting your &lt;em&gt;directory&lt;/em&gt; structure and creating the relevant projects. &lt;!--more--&gt;&lt;/p&gt;
 
@@ -58,11 +261,11 @@
     ├── src
     |   ├── api
     |       |
-    |       ├── BookStore.WebApi
+    |       ├── BookStore.WebApi.csproj
     ├── tests
     |   ├── integration
     |   ├── unit
-    |       ├── BookStore.Tests
+    |       ├── BookStore.Tests.csproj
     ├── docker
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -82,7 +285,7 @@
 
 &lt;p&gt;So now we have set up our Project directory structure, we can move on to setting up our &lt;strong&gt;Docker&lt;/strong&gt; environment, using &lt;em&gt;Dockerfiles&lt;/em&gt; and &lt;em&gt;docker-compose&lt;/em&gt;. Join me next time.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Side note:&lt;/strong&gt; Episode 1 can be found on my &lt;a href=&quot;https://github.com/garfbradaz/webapi-episodes&quot;&gt;Github Repository&lt;/a&gt;&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><category term="api" /><summary type="html">Previously on Decoding In Episode 1 I set the scene for what this series will contain. Today’s episode is simply on setting your directory structure and creating the relevant projects.</summary></entry><entry><title type="html">Episode 1 Json Api Dotnet Core Docker</title><link href="https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html" rel="alternate" type="text/html" title="Episode 1 Json Api Dotnet Core Docker" /><published>2018-12-18T00:00:00+00:00</published><updated>2018-12-18T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html">&lt;h2 id=&quot;inspiration&quot;&gt;Inspiration&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Side note:&lt;/strong&gt; Episode 2 can be found on my &lt;a href=&quot;https://github.com/garfbradaz/webapi-episodes&quot;&gt;Github Repository&lt;/a&gt;&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><category term="api" /><summary type="html">Previously on Decoding In Episode 1 I set the scene for what this series will contain. Today’s episode is simply on setting your directory structure and creating the relevant projects.</summary></entry><entry><title type="html">Episode 1 Json Api Dotnet Core Docker</title><link href="https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html" rel="alternate" type="text/html" title="Episode 1 Json Api Dotnet Core Docker" /><published>2018-12-18T00:00:00+00:00</published><updated>2018-12-18T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html">&lt;h2 id=&quot;inspiration&quot;&gt;Inspiration&lt;/h2&gt;
 
 &lt;p&gt;There is a series on &lt;a href=&quot;https://dev.o&quot;&gt;dev.to&lt;/a&gt; that I have followed by &lt;a href=&quot;https://dev.to/nathanabland&quot;&gt;Nathan Bland&lt;/a&gt; who has recorded as series of videos around creating a JSON API, using &lt;em&gt;Node.js&lt;/em&gt;, &lt;em&gt;docker&lt;/em&gt; and &lt;em&gt;Express&lt;/em&gt;. &lt;!--more--&gt;&lt;/p&gt;
 

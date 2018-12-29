@@ -4,6 +4,7 @@ author: gareth
 category: blog
 tags: [how-to,dotnet-core,beginners,api]
 excerpt_separator: <!--more-->
+series: ASP.NET Core Web API Episodes
 ---
 ## Previously on Decoding
 
@@ -71,11 +72,11 @@ Again this will create a *xunit* project type within a folder called *unit*. The
     ├── src
     |   ├── api
     |       |
-    |       ├── BookStore.WebApi
+    |       ├── BookStore.WebApi.csproj
     ├── tests
     |   ├── integration
     |   ├── unit
-    |       ├── BookStore.Tests
+    |       ├── BookStore.Tests.csproj
     ├── docker
 ```
 
@@ -93,4 +94,4 @@ Yes you guessed it, this files will become apparent (and fatter) in a future epi
 
 So now we have set up our Project directory structure, we can move on to setting up our **Docker** environment, using *Dockerfiles* and *docker-compose*. Join me next time.
 
-**Side note:** Episode 1 can be found on my [Github Repository](https://github.com/garfbradaz/webapi-episodes)
+**Side note:** Episode 2 can be found on my [Github Repository](https://github.com/garfbradaz/webapi-episodes)

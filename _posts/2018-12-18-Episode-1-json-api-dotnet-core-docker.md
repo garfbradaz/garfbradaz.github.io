@@ -4,6 +4,7 @@ author: gareth
 category: blog
 tags: [how-to,dotnet-core,beginners,api]
 excerpt_separator: <!--more-->
+series: ASP.NET Core Web API Episodes
 ---
 ## Inspiration
 
