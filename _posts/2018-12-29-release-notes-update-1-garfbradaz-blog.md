@@ -51,7 +51,7 @@ disqus:
 
 - Add a reference to `comments.html` to your `posts.html`. Add the following to the bottom of the `posts.html` (or whatever your HTMl file is called):
 
-![include-comments](/assets/posts/img/include-comments.png)
+![include-comments](/assets/img/posts/include-comments.png)
 
 - You need to turn a comment **on** using the following Front Matter value in each post file:
 
