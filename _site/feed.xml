@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://garfbradaz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://garfbradaz.github.io/" rel="alternate" type="text/html" /><updated>2018-12-29T08:57:30+00:00</updated><id>https://garfbradaz.github.io/feed.xml</id><title type="html">Gareth Bradleys Blog</title><subtitle>garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.</subtitle><entry><title type="html">Episode 3 Json Api Asp.net Core Docker Setting Up Docker Dockerfiles</title><link href="https://garfbradaz.github.io/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker-Setting-Up-Docker-DockerFiles.html" rel="alternate" type="text/html" title="Episode 3 Json Api Asp.net Core Docker  Setting Up Docker  Dockerfiles" /><published>2018-12-29T00:00:00+00:00</published><updated>2018-12-29T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker--Setting-Up-Docker--DockerFiles</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker-Setting-Up-Docker-DockerFiles.html">&lt;h2 id=&quot;previously-on-decoding&quot;&gt;Previously on Decoding&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://garfbradaz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://garfbradaz.github.io/" rel="alternate" type="text/html" /><updated>2018-12-29T18:04:56+00:00</updated><id>https://garfbradaz.github.io/feed.xml</id><title type="html">Gareth Bradleys Blog</title><subtitle>garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.</subtitle><entry><title type="html">Episode 3 Json Api Asp.net Core Docker Setting Up Docker Dockerfiles</title><link href="https://garfbradaz.github.io/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker-Setting-Up-Docker-DockerFiles.html" rel="alternate" type="text/html" title="Episode 3 Json Api Asp.net Core Docker  Setting Up Docker  Dockerfiles" /><published>2018-12-29T00:00:00+00:00</published><updated>2018-12-29T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker--Setting-Up-Docker--DockerFiles</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker-Setting-Up-Docker-DockerFiles.html">&lt;h2 id=&quot;previously-on-decoding&quot;&gt;Previously on Decoding&lt;/h2&gt;
 
 &lt;p&gt;In &lt;a href=&quot;/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html&quot;&gt;Episode 2&lt;/a&gt; I set up the project directory structure. Today’s episode is &lt;strong&gt;Docker Part 1: DockerFiles&lt;/strong&gt;. &lt;!--more--&gt;&lt;/p&gt;
 
@@ -201,7 +201,93 @@ COPY . .
 
 &lt;h3 id=&quot;next-time&quot;&gt;Next time&lt;/h3&gt;
 
-&lt;p&gt;We will be exploring &lt;code class=&quot;highlighter-rouge&quot;&gt;docker compose&lt;/code&gt; to allow us to run and knit together multiple containers together so we can interact with MongoDB for example.&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><category term="api" /><summary type="html">Previously on Decoding In Episode 2 I set up the project directory structure. Today’s episode is Docker Part 1: DockerFiles.</summary></entry><entry><title type="html">Episode 2 Json Api Dotnet Core Docker Project Structure</title><link href="https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html" rel="alternate" type="text/html" title="Episode 2 Json Api Dotnet Core Docker   Project Structure" /><published>2018-12-19T00:00:00+00:00</published><updated>2018-12-19T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker---Project-Structure</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html">&lt;h2 id=&quot;previously-on-decoding&quot;&gt;Previously on Decoding&lt;/h2&gt;
+&lt;p&gt;We will be exploring &lt;code class=&quot;highlighter-rouge&quot;&gt;docker compose&lt;/code&gt; to allow us to run and knit together multiple containers together so we can interact with MongoDB for example.&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><category term="api" /><summary type="html">Previously on Decoding In Episode 2 I set up the project directory structure. Today’s episode is Docker Part 1: DockerFiles.</summary></entry><entry><title type="html">Release Notes Update 1 Garfbradaz Blog</title><link href="https://garfbradaz.github.io/blog/2018/12/29/release-notes-update-1-garfbradaz-blog.html" rel="alternate" type="text/html" title="Release Notes Update 1 Garfbradaz Blog" /><published>2018-12-29T00:00:00+00:00</published><updated>2018-12-29T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/29/release-notes-update-1-garfbradaz-blog</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/29/release-notes-update-1-garfbradaz-blog.html">&lt;h2 id=&quot;release-notes---update-1&quot;&gt;Release Notes - Update 1&lt;/h2&gt;
+
+&lt;p&gt;Whenever I do an update to this blog itself, I will be providing some Release Notes on changes, including where possible, what I have done, as this may be helpful to someone else. &lt;!--more--&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;version-notes&quot;&gt;Version Notes&lt;/h3&gt;
+
+&lt;p&gt;I was going to use a proper Semantic Version (SemVer) for the site, but decided just to do incremental number releases (like Chrome). Just, well because!. No other reason than ease.&lt;/p&gt;
+
+&lt;h3 id=&quot;blog-post-comments&quot;&gt;Blog Post Comments&lt;/h3&gt;
+
+&lt;p&gt;I have now switched on comments using the service &lt;a href=&quot;https://disqus.com/&quot;&gt;Disqus&lt;/a&gt; for which you can sign up for free. Because Jekyll doesn’t have a back end data store, this made the most sense to me (&amp;amp; Disqus has good support).&lt;/p&gt;
+
+&lt;p&gt;How did I do it? Well this is my site, so you may need to add it different places depending on your site structure, &lt;strong&gt;but&lt;/strong&gt; I followed the standard &lt;em&gt;Jekyll&lt;/em&gt; site creation for Github Pages, the structure is what I would call &lt;strong&gt;vanilla&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Sign up to Disqus.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Take note of the the &lt;em&gt;shortname&lt;/em&gt; you create for your site.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Edit your &lt;code class=&quot;highlighter-rouge&quot;&gt;_config.yml&lt;/code&gt; and add the following:&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;disqus&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;shortname&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;lt;replace-with-your-short-name&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Create a &lt;code class=&quot;highlighter-rouge&quot;&gt;comments.html&lt;/code&gt; and and save it to your &lt;code class=&quot;highlighter-rouge&quot;&gt;_includes&lt;/code&gt; directory with the following snippet. This is the embedded code provided by Disqus:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;comments&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;disqus_thread&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;text/javascript&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;disqus_shortname&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'garfbradaz'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;dsq&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;createElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'script'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;dsq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'text/javascript'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;dsq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;dsq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;src&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'//'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;disqus_shortname&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'.disqus.com/embed.js'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getElementsByTagName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'head'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getElementsByTagName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'body'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;appendChild&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;dsq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})();&lt;/span&gt;    
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;noscript&amp;gt;&lt;/span&gt;Please enable JavaScript to view the &lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://disqus.com/?ref_noscript&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;comments powered by Disqus.&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&amp;lt;/noscript&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt; 
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Add a reference to &lt;code class=&quot;highlighter-rouge&quot;&gt;comments.html&lt;/code&gt; to your &lt;code class=&quot;highlighter-rouge&quot;&gt;posts.html&lt;/code&gt;. Add the following to the bottom of the &lt;code class=&quot;highlighter-rouge&quot;&gt;posts.html&lt;/code&gt; (or whatever your HTMl file is called):&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-liquid highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+    &amp;lt;div class=&quot;comments&quot;&amp;gt;
+        &amp;lt;div id=&quot;disqus_thread&quot;&amp;gt;&amp;lt;/div&amp;gt;
+        &amp;lt;script type=&quot;text/javascript&quot;&amp;gt;
+            var disqus_shortname = 'garfbradaz';
+            (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq); })();    
+        &amp;lt;/script&amp;gt;
+    &amp;lt;noscript&amp;gt;Please enable JavaScript to view the &amp;lt;a href=&quot;http://disqus.com/?ref_noscript&quot;&amp;gt;comments powered by Disqus.&amp;lt;/a&amp;gt;&amp;lt;/noscript&amp;gt;
+    &amp;lt;/div&amp;gt; 
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;You need to turn a comment &lt;strong&gt;on&lt;/strong&gt; using the following Front Matter value in each post file:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;comments: true
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Rebuild your posts:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;jekyll build
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Voila, you will have a nice comment at the bottom of your page:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/posts/disqus.png&quot; alt=&quot;disqus&quot; /&gt;&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="release-notes" /><category term="disqus" /><summary type="html">Release Notes - Update 1 Whenever I do an update to this blog itself, I will be providing some Release Notes on changes, including where possible, what I have done, as this may be helpful to someone else.</summary></entry><entry><title type="html">Episode 2 Json Api Dotnet Core Docker Project Structure</title><link href="https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html" rel="alternate" type="text/html" title="Episode 2 Json Api Dotnet Core Docker   Project Structure" /><published>2018-12-19T00:00:00+00:00</published><updated>2018-12-19T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker---Project-Structure</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html">&lt;h2 id=&quot;previously-on-decoding&quot;&gt;Previously on Decoding&lt;/h2&gt;
 
 &lt;p&gt;In &lt;a href=&quot;/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html&quot;&gt;Episode 1&lt;/a&gt; I set the scene for what this series will contain. Today’s episode is simply on setting your &lt;em&gt;directory&lt;/em&gt; structure and creating the relevant projects. &lt;!--more--&gt;&lt;/p&gt;
 

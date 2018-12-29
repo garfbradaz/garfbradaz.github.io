@@ -8,5 +8,7 @@ plugins:
   - jekyll-sitemap
 url: "https://garfbradaz.github.io"
 github: [metadata]
+disqus:
+    shortname: garfbradaz
 
 
