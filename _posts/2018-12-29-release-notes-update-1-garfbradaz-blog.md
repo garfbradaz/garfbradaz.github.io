@@ -5,6 +5,7 @@ category: blog
 tags: [release-notes,disqus]
 excerpt_separator: <!--more-->
 comments: true
+title: Release Notes - Update 1
 ---
 ## Release Notes - Update 1
 
