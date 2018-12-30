@@ -6,7 +6,7 @@ tags: [how-to,dotnet-core,beginners,api]
 excerpt_separator: <!--more-->
 series: ASP.NET Core Web API Episodes
 comments: true
-title: Episode 3 - JSON API using ASP.NET Core, Docker &  MongoDB
+title: Episode 1 - JSON API using ASP.NET Core, Docker &  MongoDB
 ---
 ## Inspiration
 
