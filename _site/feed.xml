@@ -1,4 +1,212 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://garfbradaz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://garfbradaz.github.io/" rel="alternate" type="text/html" /><updated>2018-12-30T16:40:50+00:00</updated><id>https://garfbradaz.github.io/feed.xml</id><title type="html">Gareth Bradleys Blog</title><subtitle>garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.</subtitle><entry><title type="html">Episode 3 - JSON API using ASP.NET Core, Docker &amp;amp; MongoDB - Docker Part I Dockerfiles</title><link href="https://garfbradaz.github.io/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker-Setting-Up-Docker-DockerFiles.html" rel="alternate" type="text/html" title="Episode 3 - JSON API using ASP.NET Core, Docker &amp;  MongoDB -  Docker Part I  Dockerfiles" /><published>2018-12-29T00:00:00+00:00</published><updated>2018-12-29T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker--Setting-Up-Docker--DockerFiles</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker-Setting-Up-Docker-DockerFiles.html">&lt;h2 id=&quot;previously-on-decoding&quot;&gt;Previously on Decoding&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://garfbradaz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://garfbradaz.github.io/" rel="alternate" type="text/html" /><updated>2018-12-31T10:59:43+00:00</updated><id>https://garfbradaz.github.io/feed.xml</id><title type="html">Gareth Bradleys Blog</title><subtitle>garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.</subtitle><entry><title type="html">Episode 4 - JSON API using ASP.NET Core, Docker &amp;amp; MongoDB - Docker Part II Docker Compose</title><link href="https://garfbradaz.github.io/blog/2018/12/31/Episode-4-JSON-API-ASP.NET-Core-Docker-Compose.html" rel="alternate" type="text/html" title="Episode 4 - JSON API using ASP.NET Core, Docker &amp; MongoDB -  Docker Part II Docker Compose" /><published>2018-12-31T00:00:00+00:00</published><updated>2018-12-31T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/31/Episode-4-JSON-API-ASP.NET-Core-Docker-Compose</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/31/Episode-4-JSON-API-ASP.NET-Core-Docker-Compose.html">&lt;h1 id=&quot;previously-on-dcoding&quot;&gt;Previously on Dcoding&lt;/h1&gt;
+
+&lt;p&gt;In &lt;a href=&quot;/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker-Setting-Up-Docker-DockerFiles.html&quot;&gt;Episode 3&lt;/a&gt; I set up our Dockerfiles for creating our &lt;em&gt;Docker Images&lt;/em&gt; for our BookStore app. This will allow us to rapidly test our application as we move forward in later Episodes. Today’s episode is &lt;strong&gt;Docker Part 2: Docking Compose&lt;/strong&gt;. &lt;!--more--&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is-docker-compose&quot;&gt;What is Docker Compose?&lt;/h2&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://docs.docker.com/compose/&quot;&gt;official documentation&lt;/a&gt; a good explanation:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Compose is a tool for defining and running multi-container Docker applications.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Docker compose allows you to define your &lt;em&gt;services&lt;/em&gt; you need to build and run a full scale application. Think about it, it is not just your application you need. Depending on the type of application you may want:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Database of some sort.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Load Balancer.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Web Server.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Other applications / APIs.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You may even want to run your unit/integration testing during your Continuous Integration pipeline (CI). You could do that with Docker and Compose.&lt;/p&gt;
+
+&lt;h2 id=&quot;bookstorewebapi-set-up&quot;&gt;BookStore.WebApi Set up&lt;/h2&gt;
+
+&lt;p&gt;If we take a look at our application for the &lt;em&gt;BookStore.WebApi&lt;/em&gt;, we can see the following:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/posts/docker-arch.png&quot; alt=&quot;architecture diagram&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see from my quickly drawn up diagram (used &lt;a href=&quot;https://www.microsoft.com/en-gb/p/microsoft-whiteboard/9mspc6mp8fm4?activetab=pivot:overviewtab&quot;&gt;Microsoft Whiteboard&lt;/a&gt;), we have two &lt;em&gt;services&lt;/em&gt; running in containers, 1 for the application and the other for the database (&lt;em&gt;MongoDB&lt;/em&gt;), so we can compose these together using &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;docker-composedevyml&quot;&gt;docker-compose.dev.yml&lt;/h2&gt;
+
+&lt;p&gt;So in  &lt;a href=&quot;/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html&quot;&gt;Episode 2&lt;/a&gt; we set up the Project Structure, so change directory to the &lt;code class=&quot;highlighter-rouge&quot;&gt;./docker&lt;/code&gt; directory.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    .
+    ├── src
+    |   ├── api
+    |       |
+    |       ├── BookStore.WebApi.csproj
+    |       ├── Dockerfile
+    ├── tests
+    |   ├── integration
+    |   ├── unit
+    |       ├── BookStore.Tests.csproj
+    ├── docker
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Within that directory, you should have two empty YAML files:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;docker-compose.dev.yml&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;docker-compose.yml&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We are concentrating on a &lt;em&gt;Development&lt;/em&gt; environment first, so add the following to &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose.dev.yml&lt;/code&gt;. These files help us define the shape of our services and the dependancies they have:&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;3&quot;&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;webapi&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;garfbradaz/bookstoreapi:develop&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;webapi_tutorial_debug&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;buildconfig&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Debug&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;../src/api&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;dockerfile&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Dockerfile&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ASPNETCORE_ENVIRONMENT=Development&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ASPNETCORE_URLS=http://+:5003&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;5003:5003&quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;depends_on&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;mongodb&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;mongodb&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;mongo:latest&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;mongodb&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;27017:27017&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And also, just add the following line to &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose.yml&lt;/code&gt; file so that when we run &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose up&lt;/code&gt; it doesn’t fail:&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;3&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;As in &lt;strong&gt;Episode 3&lt;/strong&gt; lets break this &lt;em&gt;YAML&lt;/em&gt; file down now and what we are declaring. These files are &lt;em&gt;YAML&lt;/em&gt; and following the normal &lt;em&gt;YAML&lt;/em&gt; syntax rules around indenting etc.&lt;/p&gt;
+
+&lt;h3 id=&quot;version&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;version:&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;This is really important. The currently released version (as of December 2018) is &lt;strong&gt;3(.7)&lt;/strong&gt;. You only have to include the whole number within the &lt;code class=&quot;highlighter-rouge&quot;&gt;version&lt;/code&gt; number field within the YAML file. Each &lt;em&gt;major&lt;/em&gt; upgrade (from 1.x, to 2.x, to 3.x) brings about possible breaking changes, including syntax changes to the YAML structure itself.&lt;/p&gt;
+
+&lt;p&gt;Also the version of Compose relates to the version of the released &lt;em&gt;Docker Engine&lt;/em&gt; so have a good read of the &lt;a href=&quot;https://docs.docker.com/compose/compose-file/compose-versioning/#compatibility-matrix&quot;&gt;Compatibility Matrix&lt;/a&gt;, but usually you pick the latest version.&lt;/p&gt;
+
+&lt;h3 id=&quot;services&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;services:&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://docs.docker.com/get-started/part3/&quot;&gt;Docker services&lt;/a&gt; is where you define each application. So we have two services defined:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;webapi:&lt;/code&gt; which is our ASP.NET Core &lt;em&gt;BookStore.WebApi&lt;/em&gt; application.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;mongodb:&lt;/code&gt; which is the back-end data store, &lt;em&gt;MongoDB&lt;/em&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;image&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;image:&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Each service has an &lt;code class=&quot;highlighter-rouge&quot;&gt;image&lt;/code&gt; defined. Mongo’s &lt;a href=&quot;https://hub.docker.com/_/mongo&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;mongo:latest&lt;/code&gt;&lt;/a&gt; will be pulled directly from &lt;em&gt;hub.docker.com&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Our own will be built locally for now (until we publish it later) and its simply called &lt;code class=&quot;highlighter-rouge&quot;&gt;garfbradaz/bookstoreapi:develop&lt;/code&gt;. Note the &lt;em&gt;tag&lt;/em&gt; of &lt;strong&gt;develop&lt;/strong&gt;. We now have denoted our debug image, and we can add things like symbols etc for debugging purposes.&lt;/p&gt;
+
+&lt;h3 id=&quot;container_name&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;container_name:&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;This is just a nice friendly name for our container. You can see the name when you run &lt;code class=&quot;highlighter-rouge&quot;&gt;docker ps&lt;/code&gt; after you have run a container.&lt;/p&gt;
+
+&lt;h2 id=&quot;run-your-applications&quot;&gt;Run your applications&lt;/h2&gt;
+
+&lt;p&gt;Docker compose has a command  &lt;code class=&quot;highlighter-rouge&quot;&gt;docker compose up&lt;/code&gt;, which allows you to (re)build, (re)create and attach containers for the service. You run the command using the following (make sure you are in the &lt;code class=&quot;highlighter-rouge&quot;&gt;./docker&lt;/code&gt; directory):&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker-compose &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; docker-compose.dev.yml up &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--build&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This command overrides the file (&lt;code class=&quot;highlighter-rouge&quot;&gt;-f&lt;/code&gt;) to &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose.dev.yml&lt;/code&gt; and runs &lt;code class=&quot;highlighter-rouge&quot;&gt;up&lt;/code&gt;. The containers will run in detached mode (&lt;code class=&quot;highlighter-rouge&quot;&gt;-d&lt;/code&gt;) and run in the background. We will also (re)build the images (&lt;code class=&quot;highlighter-rouge&quot;&gt;--build&lt;/code&gt;). Because we have a &lt;code class=&quot;highlighter-rouge&quot;&gt;build&lt;/code&gt; section in our &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose.dev.yml&lt;/code&gt; file for our code those values will be used. We set the context (&lt;code class=&quot;highlighter-rouge&quot;&gt;../src/api&lt;/code&gt;) which is the relative directory to the source code we are building (Relative to the &lt;code class=&quot;highlighter-rouge&quot;&gt;./docker&lt;/code&gt; directory), plus tell &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose&lt;/code&gt; the Dockerfile name.&lt;/p&gt;
+
+&lt;p&gt;We also send in some &lt;code class=&quot;highlighter-rouge&quot;&gt;args&lt;/code&gt; &lt;em&gt;into&lt;/em&gt; the Dockerfile. Currently we ignore these, but we will be coming back to them later in this post.&lt;/p&gt;
+
+&lt;p&gt;Lastly we set some &lt;code class=&quot;highlighter-rouge&quot;&gt;environment&lt;/code&gt; variables for our application/ASP.NET Core to use. Specifically around setting up a &lt;code class=&quot;highlighter-rouge&quot;&gt;Development&lt;/code&gt; environment and HTTP URLs.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; If we dont set these, our application will try and use HTTPS because that is the default now (which is a good thing). Because we haven’t set any self-signed developer certificates up yet this will become a bit of a pain. We will do it, but to get up and running, we are switching off HTTPS for now.&lt;/p&gt;
+
+&lt;p&gt;We also pull down a &lt;strong&gt;MongoDB&lt;/strong&gt; image and start a new database, listening on port 27017. This is the standard port mapping for MongoDB.&lt;/p&gt;
+
+&lt;p&gt;This command will also create a default network for your applications to live in. Normally named after the directory &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose&lt;/code&gt; is run with a postfix of &lt;strong&gt;default&lt;/strong&gt;. So mine is &lt;code class=&quot;highlighter-rouge&quot;&gt;docker_default&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;check-the-containers-are-running&quot;&gt;Check the containers are running&lt;/h2&gt;
+
+&lt;p&gt;You can now run a &lt;code class=&quot;highlighter-rouge&quot;&gt;docker ps&lt;/code&gt; on your commandline of choice. You should see  your &lt;code class=&quot;highlighter-rouge&quot;&gt;webapi_tutorial_debug&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;mongodb&lt;/code&gt; (&lt;strong&gt;Hint:&lt;/strong&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;container_name&lt;/code&gt; you set in the &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose.dev.yml&lt;/code&gt; file).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/posts/docker-ps.png&quot; alt=&quot;docker ps&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;stop-containers&quot;&gt;Stop containers&lt;/h2&gt;
+
+&lt;p&gt;When you have finished you can clear up your containers by running the following, which will stop and remove the containers networks created for this service:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker-compose &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; docker-compose.dev.yml down
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;powershell-scripts-optional&quot;&gt;Powershell Scripts (Optional)&lt;/h2&gt;
+
+&lt;p&gt;I have created two powershell scripts that automate this. You just need to run them in the root of the project:&lt;/p&gt;
+
+&lt;h3 id=&quot;run-containers&quot;&gt;Run containers&lt;/h3&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;.\run.ps1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;close-and-clean-containers&quot;&gt;Close and clean containers&lt;/h3&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;.\clean.ps1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Powershell Core is now cross platform as well so you can install Powershell Core and use these scripts on Mac and Linux boxes if you wish.&lt;/p&gt;
+
+&lt;h2 id=&quot;debug-arguments&quot;&gt;Debug Arguments&lt;/h2&gt;
+
+&lt;p&gt;Previously I mentioned we set a &lt;code class=&quot;highlighter-rouge&quot;&gt;arg&lt;/code&gt; called &lt;code class=&quot;highlighter-rouge&quot;&gt;buildconfig&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;Debug&lt;/code&gt;. We haven’t used this so far. But we will now. I use this to build a debug version of our ASP.NET Core &lt;em&gt;BookStore.WebApi&lt;/em&gt; app, so we can debug into the container using &lt;em&gt;vsdbg&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Have a read of my article &lt;a href=&quot;/blog/2018/12/13/debug-dotnet-core-in-docker.html&quot;&gt;Debug .NET Core in Docker&lt;/a&gt; about what this is. For this article, change directory to &lt;code class=&quot;highlighter-rouge&quot;&gt;./src/api&lt;/code&gt; and make sure your &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; looks like this:&lt;/p&gt;
+
+&lt;div class=&quot;language-docker highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; microsoft/dotnet:2.2-sdk AS build-env&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;ARG&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; buildconfig&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;WORKDIR&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; /app&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;COPY&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; BookStore.WebApi.csproj .&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;COPY&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; . .&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;env
+&lt;span class=&quot;k&quot;&gt;RUN if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;buildconfig&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Debug&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;        dotnet publish &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; /publish &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; Debug&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;        dotnet publish &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; /publish &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; Release&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt; 
+
+&lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; microsoft/dotnet:2.2-aspnetcore-runtime AS runtime-env&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;ARG&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; buildconfig&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; DEBIAN_FRONTEND noninteractive&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;WORKDIR&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; /publish&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;COPY&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; --from=build-env /publish .&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;RUN if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;buildconfig&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Debug&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;        apt-get update &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;        apt-get install &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--no-install-recommends&lt;/span&gt; apt-utils &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;        apt-get install curl unzip procps mongodb &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;        curl &lt;span class=&quot;nt&quot;&gt;-sSL&lt;/span&gt; https://aka.ms/getvsdbgsh | bash /dev/stdin &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; latest &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; /publish/vsdbg&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\
+&lt;/span&gt;     &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;
+        echo &quot;*Whistling*&quot;; \
+    fi 
+&lt;span class=&quot;k&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; DEBIAN_FRONTEND teletype&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;ENTRYPOINT&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; [ &quot;dotnet&quot;,&quot;BookStore.WebApi.dll&quot; ]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;next-time&quot;&gt;Next time&lt;/h2&gt;
+
+&lt;p&gt;That’s it for today. Remember all code is on &lt;a href=&quot;https://github.com/garfbradaz/webapi-episodes/tree/master/episode-4&quot;&gt;Github&lt;/a&gt; if you want it.&lt;/p&gt;
+
+&lt;p&gt;Now we have our architecture spun up and ready, we can start building some ASP.NET Core code (using C#) to start creating our Models for our &lt;em&gt;BookStore.WebApi&lt;/em&gt;. We will also start creating some unit tests and creating the shape of our API.&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><category term="api" /><category term="docker-compose" /><category term="mongodb" /><summary type="html">Previously on Dcoding In Episode 3 I set up our Dockerfiles for creating our Docker Images for our BookStore app. This will allow us to rapidly test our application as we move forward in later Episodes. Today’s episode is Docker Part 2: Docking Compose.</summary></entry><entry><title type="html">Episode 3 - JSON API using ASP.NET Core, Docker &amp;amp; MongoDB - Docker Part I Dockerfiles</title><link href="https://garfbradaz.github.io/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker-Setting-Up-Docker-DockerFiles.html" rel="alternate" type="text/html" title="Episode 3 - JSON API using ASP.NET Core, Docker &amp; MongoDB - Docker Part I  Dockerfiles" /><published>2018-12-29T00:00:00+00:00</published><updated>2018-12-29T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker--Setting-Up-Docker--DockerFiles</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker-Setting-Up-Docker-DockerFiles.html">&lt;h1 id=&quot;previously-on-dcoding&quot;&gt;Previously on Dcoding&lt;/h1&gt;
 
 &lt;p&gt;In &lt;a href=&quot;/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html&quot;&gt;Episode 2&lt;/a&gt; I set up the project directory structure. Today’s episode is &lt;strong&gt;Docker Part 1: DockerFiles&lt;/strong&gt;. &lt;!--more--&gt;&lt;/p&gt;
 
@@ -121,7 +329,7 @@ build users can create an automated build that executes several command-line ins
 
 &lt;p&gt;If this is new to you, then let me explain the format on this file and what it means.&lt;/p&gt;
 
-&lt;h3 id=&quot;from&quot;&gt;FROM&lt;/h3&gt;
+&lt;h3 id=&quot;from&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;FROM&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;This statement sets the &lt;em&gt;base image&lt;/em&gt; created by Microsoft (or any organisation who has created an base image) and creates a new build stage (each &lt;code class=&quot;highlighter-rouge&quot;&gt;FROM&lt;/code&gt; creates a new stage). These images will live on a public repository like &lt;em&gt;hub.docker.com&lt;/em&gt;. So make sure you have logged in via &lt;em&gt;Docker Desktop&lt;/em&gt; otherwise the first build step will fail.&lt;/p&gt;
 
@@ -136,11 +344,11 @@ build users can create an automated build that executes several command-line ins
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;workdir&quot;&gt;WORKDIR&lt;/h3&gt;
+&lt;h3 id=&quot;workdir&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;WORKDIR&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;This statement will create a directory for the following statements will work in. If the directory exists, then the directory is just set to the value in &lt;code class=&quot;highlighter-rouge&quot;&gt;WORKDIR&lt;/code&gt;. In our case &lt;code class=&quot;highlighter-rouge&quot;&gt;/app&lt;/code&gt; is created by the command and &lt;code class=&quot;highlighter-rouge&quot;&gt;/publish&lt;/code&gt; is set to (as publish is created in the &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet publish&lt;/code&gt;).&lt;/p&gt;
 
-&lt;h3 id=&quot;copy&quot;&gt;COPY&lt;/h3&gt;
+&lt;h3 id=&quot;copy&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;COPY&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;This statement will copy the files specified &lt;em&gt;into&lt;/em&gt; the containers file system (normally into the file system specified in &lt;code class=&quot;highlighter-rouge&quot;&gt;WORKDIR&lt;/code&gt;) from the host machine of the directory where the Dockerfile is placed. So in our instance, the &lt;code class=&quot;highlighter-rouge&quot;&gt;../src/api&lt;/code&gt; directory.&lt;/p&gt;
 
@@ -152,13 +360,13 @@ COPY . .
 
 &lt;p&gt;Our 2nd stage actually copies the output from &lt;code class=&quot;highlighter-rouge&quot;&gt;build-env&lt;/code&gt; &lt;strong&gt;/publish&lt;/strong&gt; directory into the next stage.&lt;/p&gt;
 
-&lt;h3 id=&quot;run&quot;&gt;RUN&lt;/h3&gt;
+&lt;h3 id=&quot;run&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;RUN&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;This statement will run a set of commands that will create another layer in your image and commit the results, which will form part of the container. It allows you to set up your container before running it.&lt;/p&gt;
 
 &lt;p&gt;Our example is the &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet publish&lt;/code&gt; will be &lt;code class=&quot;highlighter-rouge&quot;&gt;RUN&lt;/code&gt; as part of the &lt;code class=&quot;highlighter-rouge&quot;&gt;docker build&lt;/code&gt; instruction set, creating the binaries to use when we &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet&lt;/code&gt; using the published &lt;code class=&quot;highlighter-rouge&quot;&gt;.dll&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h3 id=&quot;entrypoint&quot;&gt;ENTRYPOINT&lt;/h3&gt;
+&lt;h3 id=&quot;entrypoint&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ENTRYPOINT&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;This statement defines what is run when you &lt;code class=&quot;highlighter-rouge&quot;&gt;docker run&lt;/code&gt; and start the container. Our &lt;code class=&quot;highlighter-rouge&quot;&gt;ENTRYPOINT&lt;/code&gt; runs the &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet&lt;/code&gt; command using our published &lt;code class=&quot;highlighter-rouge&quot;&gt;.dll&lt;/code&gt;. You can pass more parameters into the &lt;code class=&quot;highlighter-rouge&quot;&gt;ENTRYPOINT&lt;/code&gt; command via &lt;code class=&quot;highlighter-rouge&quot;&gt;docker run&lt;/code&gt;.&lt;/p&gt;
 
@@ -201,7 +409,7 @@ COPY . .
 
 &lt;h3 id=&quot;next-time&quot;&gt;Next time&lt;/h3&gt;
 
-&lt;p&gt;We will be exploring &lt;code class=&quot;highlighter-rouge&quot;&gt;docker compose&lt;/code&gt; to allow us to run and knit together multiple containers together so we can interact with MongoDB for example.&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><category term="api" /><summary type="html">Previously on Decoding In Episode 2 I set up the project directory structure. Today’s episode is Docker Part 1: DockerFiles.</summary></entry><entry><title type="html">Release Notes - Update 1</title><link href="https://garfbradaz.github.io/blog/2018/12/29/release-notes-update-1-garfbradaz-blog.html" rel="alternate" type="text/html" title="Release Notes - Update 1" /><published>2018-12-29T00:00:00+00:00</published><updated>2018-12-29T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/29/release-notes-update-1-garfbradaz-blog</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/29/release-notes-update-1-garfbradaz-blog.html">&lt;h2 id=&quot;release-notes---update-1&quot;&gt;Release Notes - Update 1&lt;/h2&gt;
+&lt;p&gt;We will be exploring &lt;code class=&quot;highlighter-rouge&quot;&gt;docker compose&lt;/code&gt; to allow us to run and knit together multiple containers together so we can interact with MongoDB for example.&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><category term="api" /><category term="dockerfiles" /><summary type="html">Previously on Dcoding In Episode 2 I set up the project directory structure. Today’s episode is Docker Part 1: DockerFiles.</summary></entry><entry><title type="html">Release Notes - Update 1</title><link href="https://garfbradaz.github.io/blog/2018/12/29/release-notes-update-1-garfbradaz-blog.html" rel="alternate" type="text/html" title="Release Notes - Update 1" /><published>2018-12-29T00:00:00+00:00</published><updated>2018-12-29T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/29/release-notes-update-1-garfbradaz-blog</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/29/release-notes-update-1-garfbradaz-blog.html">&lt;h2 id=&quot;release-notes---update-1&quot;&gt;Release Notes - Update 1&lt;/h2&gt;
 
 &lt;p&gt;Whenever I do an update to this blog itself, I will be providing some Release Notes on changes, including where possible, what I have done, as this may be helpful to someone else. &lt;!--more--&gt;&lt;/p&gt;
 
@@ -274,7 +482,7 @@ COPY . .
   &lt;li&gt;Voila, you will have a nice comment at the bottom of your page:&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/img/posts/disqus.png&quot; alt=&quot;disqus&quot; /&gt;&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="release-notes" /><category term="disqus" /><summary type="html">Release Notes - Update 1 Whenever I do an update to this blog itself, I will be providing some Release Notes on changes, including where possible, what I have done, as this may be helpful to someone else.</summary></entry><entry><title type="html">Episode 2 - JSON API using ASP.NET Core, Docker &amp;amp; MongoDB - Project Structure</title><link href="https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html" rel="alternate" type="text/html" title="Episode 2 - JSON API using ASP.NET Core, Docker &amp;  MongoDB -  Project Structure" /><published>2018-12-19T00:00:00+00:00</published><updated>2018-12-19T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker---Project-Structure</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html">&lt;h2 id=&quot;previously-on-decoding&quot;&gt;Previously on Decoding&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/posts/disqus.png&quot; alt=&quot;disqus&quot; /&gt;&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="release-notes" /><category term="disqus" /><summary type="html">Release Notes - Update 1 Whenever I do an update to this blog itself, I will be providing some Release Notes on changes, including where possible, what I have done, as this may be helpful to someone else.</summary></entry><entry><title type="html">Episode 2 - JSON API using ASP.NET Core, Docker &amp;amp; MongoDB - Project Structure</title><link href="https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html" rel="alternate" type="text/html" title="Episode 2 - JSON API using ASP.NET Core, Docker &amp;  MongoDB -  Project Structure" /><published>2018-12-19T00:00:00+00:00</published><updated>2018-12-19T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker---Project-Structure</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html">&lt;h1 id=&quot;previously-on-decoding&quot;&gt;Previously on Decoding&lt;/h1&gt;
 
 &lt;p&gt;In &lt;a href=&quot;/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html&quot;&gt;Episode 1&lt;/a&gt; I set the scene for what this series will contain. Today’s episode is simply on setting your &lt;em&gt;directory&lt;/em&gt; structure and creating the relevant projects. &lt;!--more--&gt;&lt;/p&gt;
 
@@ -358,7 +566,7 @@ COPY . .
 
 &lt;p&gt;So now we have set up our Project directory structure, we can move on to setting up our &lt;strong&gt;Docker&lt;/strong&gt; environment, using &lt;em&gt;Dockerfiles&lt;/em&gt; and &lt;em&gt;docker-compose&lt;/em&gt;. Join me next time.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Side note:&lt;/strong&gt; Episode 2 can be found on my &lt;a href=&quot;https://github.com/garfbradaz/webapi-episodes&quot;&gt;Github Repository&lt;/a&gt;&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><category term="api" /><summary type="html">Previously on Decoding In Episode 1 I set the scene for what this series will contain. Today’s episode is simply on setting your directory structure and creating the relevant projects.</summary></entry><entry><title type="html">Episode 3 - JSON API using ASP.NET Core, Docker &amp;amp; MongoDB</title><link href="https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html" rel="alternate" type="text/html" title="Episode 3 - JSON API using ASP.NET Core, Docker &amp;  MongoDB" /><published>2018-12-18T00:00:00+00:00</published><updated>2018-12-18T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html">&lt;h2 id=&quot;inspiration&quot;&gt;Inspiration&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Side note:&lt;/strong&gt; Episode 2 can be found on my &lt;a href=&quot;https://github.com/garfbradaz/webapi-episodes&quot;&gt;Github Repository&lt;/a&gt;&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><category term="api" /><summary type="html">Previously on Decoding In Episode 1 I set the scene for what this series will contain. Today’s episode is simply on setting your directory structure and creating the relevant projects.</summary></entry><entry><title type="html">Episode 1 - JSON API using ASP.NET Core, Docker &amp;amp; MongoDB</title><link href="https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html" rel="alternate" type="text/html" title="Episode 1 - JSON API using ASP.NET Core, Docker &amp; MongoDB" /><published>2018-12-18T00:00:00+00:00</published><updated>2018-12-18T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html">&lt;h2 id=&quot;inspiration&quot;&gt;Inspiration&lt;/h2&gt;
 
 &lt;p&gt;There is a series on &lt;a href=&quot;https://dev.o&quot;&gt;dev.to&lt;/a&gt; that I have followed by &lt;a href=&quot;https://dev.to/nathanabland&quot;&gt;Nathan Bland&lt;/a&gt; who has recorded as series of videos around creating a JSON API, using &lt;em&gt;Node.js&lt;/em&gt;, &lt;em&gt;docker&lt;/em&gt; and &lt;em&gt;Express&lt;/em&gt;. &lt;!--more--&gt;&lt;/p&gt;
 
@@ -460,7 +668,7 @@ We can add &lt;em&gt;API Keys&lt;/em&gt; to the API
 
 &lt;h2 id=&quot;next-time&quot;&gt;Next time&lt;/h2&gt;
 
-&lt;p&gt;We will create the &lt;em&gt;ASP.NET Core WebAPI&lt;/em&gt; template, set up the project structure. Join me next time!.&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><category term="api" /><summary type="html">Inspiration There is a series on dev.to that I have followed by Nathan Bland who has recorded as series of videos around creating a JSON API, using Node.js, docker and Express.</summary></entry><entry><title type="html">Debug Dotnet Core In Docker</title><link href="https://garfbradaz.github.io/blog/2018/12/13/debug-dotnet-core-in-docker.html" rel="alternate" type="text/html" title="Debug Dotnet Core In Docker" /><published>2018-12-13T00:00:00+00:00</published><updated>2018-12-13T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/13/debug-dotnet-core-in-docker</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/13/debug-dotnet-core-in-docker.html">&lt;h2 id=&quot;debugging-aspnet-core-in-a-linux-docker-with-visual-studio-code&quot;&gt;Debugging ASP.NET Core in a Linux Docker with Visual Studio Code&lt;/h2&gt;
+&lt;p&gt;We will create the &lt;em&gt;ASP.NET Core WebAPI&lt;/em&gt; template, set up the project structure. Join me next time!.&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><category term="api" /><summary type="html">Inspiration There is a series on dev.to that I have followed by Nathan Bland who has recorded as series of videos around creating a JSON API, using Node.js, docker and Express.</summary></entry><entry><title type="html">Debug .NET Core in Docker using Visual Studio Code</title><link href="https://garfbradaz.github.io/blog/2018/12/13/debug-dotnet-core-in-docker.html" rel="alternate" type="text/html" title="Debug .NET Core in Docker using Visual Studio Code" /><published>2018-12-13T00:00:00+00:00</published><updated>2018-12-13T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/13/debug-dotnet-core-in-docker</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/13/debug-dotnet-core-in-docker.html">&lt;h2 id=&quot;debugging-aspnet-core-in-a-linux-docker-with-visual-studio-code&quot;&gt;Debugging ASP.NET Core in a Linux Docker with Visual Studio Code&lt;/h2&gt;
 
 &lt;p&gt;So, you have started using Docker for your .NET Core applications - awesome news. You are using Linux Containers, and Visual Studio Code, and you then go to Debug your container…..oh. &lt;!--more--&gt; (I’m using Windows).&lt;/p&gt;
 

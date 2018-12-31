@@ -2,14 +2,14 @@
 layout: post
 author: gareth
 category: blog
-tags: [how-to,dotnet-core,beginners,api]
+tags: [how-to,dotnet-core,beginners,api,dockerfiles]
 excerpt_separator: <!--more-->
 series: ASP.NET Core Web API Episodes
 comments: true
-title: Episode 3 - JSON API using ASP.NET Core, Docker &  MongoDB -  Docker Part I  Dockerfiles
+title: Episode 3 - JSON API using ASP.NET Core, Docker & MongoDB - Docker Part I  Dockerfiles
 ---
 
-## Previously on Decoding
+# Previously on Dcoding
 
 In [Episode 2]({{ site.baseurl }}{% post_url 2018-12-19-Episode-2-JSON-API-Dotnet-Core-Docker---Project-Structure %}) I set up the project directory structure. Today's episode is **Docker Part 1: DockerFiles**. <!--more-->
 
@@ -135,7 +135,7 @@ ENTRYPOINT [ "dotnet","BookStore.WebApi.dll" ]
 
 If this is new to you, then let me explain the format on this file and what it means.
 
-### FROM
+### `FROM`
 
 This statement sets the *base image* created by Microsoft (or any organisation who has created an base image) and creates a new build stage (each `FROM` creates a new stage). These images will live on a public repository like *hub.docker.com*. So make sure you have logged in via *Docker Desktop* otherwise the first build step will fail.
 
@@ -145,11 +145,11 @@ Having multiple `FROM` denotes a multi-stage Dockerfile.
 
 - [microsoft/dotnet:2.2-aspnetcore-runtime](https://hub.docker.com/r/microsoft/dotnet/) - Runtime image. This base image is designed to run a ASP.NET Core application using the *dotnet runtime*. Again it follows the same format with denoting the dotnet version by the common tag of **:2.2-aspnetcore-runtime**.
 
-### WORKDIR
+### `WORKDIR`
 
 This statement will create a directory for the following statements will work in. If the directory exists, then the directory is just set to the value in `WORKDIR`. In our case `/app` is created by the command and `/publish` is set to (as publish is created in the `dotnet publish`).
 
-### COPY
+### `COPY`
 
 This statement will copy the files specified *into* the containers file system (normally into the file system specified in `WORKDIR`) from the host machine of the directory where the Dockerfile is placed. So in our instance, the `../src/api` directory.
 
@@ -162,13 +162,13 @@ COPY . .
 
 Our 2nd stage actually copies the output from `build-env` **/publish** directory into the next stage.
 
-### RUN
+### `RUN`
 
 This statement will run a set of commands that will create another layer in your image and commit the results, which will form part of the container. It allows you to set up your container before running it.
 
 Our example is the `dotnet publish` will be `RUN` as part of the `docker build` instruction set, creating the binaries to use when we `dotnet` using the published `.dll`.
 
-### ENTRYPOINT
+### `ENTRYPOINT`
 
 This statement defines what is run when you `docker run` and start the container. Our `ENTRYPOINT` runs the `dotnet` command using our published `.dll`. You can pass more parameters into the `ENTRYPOINT` command via `docker run`.
 

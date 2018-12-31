@@ -4,6 +4,7 @@ author: gareth
 category: blog
 tags: [how-to,dotnet-core,beginners]
 excerpt_separator: <!--more-->
+title: Debug .NET Core in Docker using Visual Studio Code
 ---
 ## Debugging ASP.NET Core in a Linux Docker with Visual Studio Code
 
