@@ -8,7 +8,7 @@ series: ASP.NET Core Web API Episodes
 comments: true
 title: Episode 2 - JSON API using ASP.NET Core, Docker &  MongoDB -  Project Structure
 ---
-# Previously on Decoding
+## Previously on Decoding
 
 In [Episode 1]({{ site.baseurl }}{% post_url 2018-12-18-Episode-1-json-api-dotnet-core-docker %}) I set the scene for what this series will contain. Today's episode is simply on setting your *directory* structure and creating the relevant projects. <!--more-->
 

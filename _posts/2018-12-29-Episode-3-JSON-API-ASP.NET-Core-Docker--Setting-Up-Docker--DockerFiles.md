@@ -9,7 +9,7 @@ comments: true
 title: Episode 3 - JSON API using ASP.NET Core, Docker & MongoDB - Docker Part I  Dockerfiles
 ---
 
-# Previously on Dcoding
+## Previously on Dcoding
 
 In [Episode 2]({{ site.baseurl }}{% post_url 2018-12-19-Episode-2-JSON-API-Dotnet-Core-Docker---Project-Structure %}) I set up the project directory structure. Today's episode is **Docker Part 1: DockerFiles**. <!--more-->
 

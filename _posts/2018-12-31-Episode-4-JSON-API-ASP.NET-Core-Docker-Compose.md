@@ -8,7 +8,7 @@ series: ASP.NET Core Web API Episodes
 comments: true
 title: Episode 4 - JSON API using ASP.NET Core, Docker & MongoDB -  Docker Part II Docker Compose
 ---
-# Previously on Dcoding
+## Previously on Dcoding
 
 In [Episode 3]({{ site.baseurl }}{% post_url 2018-12-29-Episode-3-JSON-API-ASP.NET-Core-Docker--Setting-Up-Docker--DockerFiles %}) I set up our Dockerfiles for creating our *Docker Images* for our BookStore app. This will allow us to rapidly test our application as we move forward in later Episodes. Today's episode is **Docker Part 2: Docking Compose**. <!--more-->
 
