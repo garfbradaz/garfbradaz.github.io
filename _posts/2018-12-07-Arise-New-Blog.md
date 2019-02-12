@@ -1,6 +1,6 @@
 ---
 layout: post
-author: gareth
+author: garfbradaz
 category: blog
 tags: [misc,jekyll]
 excerpt_separator: <!--more-->

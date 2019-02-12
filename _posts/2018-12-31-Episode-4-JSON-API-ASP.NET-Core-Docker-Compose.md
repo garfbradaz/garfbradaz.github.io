@@ -1,8 +1,8 @@
 ---
 layout: post
-author: gareth
+author: garfbradaz
 category: blog
-tags: [how-to,dotnet-core,beginners,api,docker-compose,mongodb]
+tags: [how-to,dotnetcore,beginners,api,docker-compose,mongodb]
 excerpt_separator: <!--more-->
 series: ASP.NET Core Web API Episodes
 comments: true

@@ -1,6 +1,6 @@
 ---
 layout: post
-author: gareth
+author: garfbradaz
 category: blog
 tags: [how-to,dotnet-core,beginners,api,dockerfiles]
 excerpt_separator: <!--more-->

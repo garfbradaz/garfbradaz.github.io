@@ -1,6 +1,6 @@
 ---
 layout: post
-author: gareth
+author: garfbradaz
 category: blog
 tags: [release-notes,disqus]
 excerpt_separator: <!--more-->

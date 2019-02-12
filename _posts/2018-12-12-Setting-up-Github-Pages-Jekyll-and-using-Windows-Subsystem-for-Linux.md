@@ -1,6 +1,6 @@
 ---
 layout: post
-author: gareth
+author: garfbradaz
 category: blog
 tags: [jekyll,release-notes,how-to]
 excerpt_separator: <!--more-->

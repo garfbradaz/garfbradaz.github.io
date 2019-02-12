@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Gareth Bradleys Blog" />
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Raspberrypi Cluster Kubernetes | Gareth Bradleys Blog</title>
+<meta name="generator" content="Jekyll v3.7.4" />
+<meta property="og:title" content="Raspberrypi Cluster Kubernetes" />
+<meta name="author" content="garfbradaz" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Creating Raspberry Pi Cluster to Learn Kubernetes In August 2018 I bought some Pi’s tp create a cluster, mainly after reading and watching Alex Ellis and Scott Hansleman’s blogs and videos on the subject, which inspired me to make the purchase. I was running Code Clubs at the time, so I thought this would make a good show and tell as well." />
+<meta property="og:description" content="Creating Raspberry Pi Cluster to Learn Kubernetes In August 2018 I bought some Pi’s tp create a cluster, mainly after reading and watching Alex Ellis and Scott Hansleman’s blogs and videos on the subject, which inspired me to make the purchase. I was running Code Clubs at the time, so I thought this would make a good show and tell as well." />
+<link rel="canonical" href="http://localhost:4000/blog/2019/02/12/RaspberryPi-Cluster-Kubernetes.html" />
+<meta property="og:url" content="http://localhost:4000/blog/2019/02/12/RaspberryPi-Cluster-Kubernetes.html" />
+<meta property="og:site_name" content="Gareth Bradleys Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-02-12T00:00:00+00:00" />
+<script type="application/ld+json">
+{"description":"Creating Raspberry Pi Cluster to Learn Kubernetes In August 2018 I bought some Pi’s tp create a cluster, mainly after reading and watching Alex Ellis and Scott Hansleman’s blogs and videos on the subject, which inspired me to make the purchase. I was running Code Clubs at the time, so I thought this would make a good show and tell as well.","author":{"@type":"Person","name":"garfbradaz"},"@type":"BlogPosting","url":"http://localhost:4000/blog/2019/02/12/RaspberryPi-Cluster-Kubernetes.html","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/new.png"},"name":"garfbradaz"},"headline":"Raspberrypi Cluster Kubernetes","dateModified":"2019-02-12T00:00:00+00:00","datePublished":"2019-02-12T00:00:00+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/blog/2019/02/12/RaspberryPi-Cluster-Kubernetes.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <link rel="stylesheet" href="/assets/css/matrix.css?v=">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130935873-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-130935873-1');
+    </script>
+    <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="http://localhost:4000/">Gareth Bradleys Blog</a></h1>
+        <nav>
+  
+    <a href="/" >
+      Home
+    </a>
+  
+    <a href="/about.html" >
+      About
+    </a>
+  
+    <a href="/blog.html" >
+      Blog
+    </a>
+  
+</nav>
+
+        
+          <img src="/assets/img/new.png" alt="Logo" />
+        
+
+        <p>garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.</p>
+
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <h1>Raspberrypi Cluster Kubernetes</h1>
+<p>12 Feb 2019 - garfbradaz - blog</p>
+
+<h2 id="creating-raspberry-pi-cluster-to-learn-kubernetes">Creating Raspberry Pi Cluster to Learn Kubernetes</h2>
+
+<p>In August 2018 I bought some Pi’s tp create a cluster, mainly after reading and watching <a href="https://blog.alexellis.io/build-your-own-bare-metal-arm-cluster/">Alex Ellis</a> and <a href="https://www.hanselman.com/blog/HowToBuildAKubernetesClusterWithARMRaspberryPiThenRunNETCoreOnOpenFaas.aspx">Scott Hansleman’s</a> blogs and videos on the subject, which inspired me to make the purchase. I was running Code Clubs at the time, so I thought this would make a good show and tell as well.<!--more--></p>
+
+<p>Both Alex and Scott posts were both inspiring and I really wanted to give it ago. Anyway I got the equipment, but work and real-life got in the way and progress was slow. Then in December 2018 I landed a new job, starting in April this year, and they use Kubernetes extensively so I also had another good reason to get it up and running - to learn Kubernetes!</p>
+
+<p>So this month I finally got it working, including a proper master and node setup:</p>
+
+<p><img src="/assets/img/posts/Pi-3.jpg" alt="" /></p>
+
+<p>There were some pain points, like make sure you set up your static IP’s for your Pi’s (and set them up correctly on your router), and more importantly, set up a static IP <em>for</em> the router itself. The yellow box is the picture is the <a href="https://www.amazon.co.uk/gp/product/B073TSK26W/ref=oh_aui_search_asin_title?ie=UTF8&amp;psc=1">rGL-MT300N-V2 router I went for</a>  in the end, and the only bit of Hanselmans shopping list from his post, I diverted from.</p>
+
+<h2 id="my-sons-love-it">My Sons love it</h2>
+
+<p>My two sons love it, as we are building Raspberry Pi robots as well in parallel to this. They are interested in what this is doing and <em>why</em>. Sparking curiosity in little minds is important, and me just building websites doesn’t get their juices flowing!</p>
+
+<h2 id="should-i-do-this">Should I do this?</h2>
+<p>Yes. :)</p>
+
+<h2 id="whats-next">Whats next?</h2>
+
+<p>Well, learning Kubernetes itself and running some .NET Core container sites. I would like to see how quick the .NET SDK is for building on the Pi’s now, as I would like to experiment with an local build server.</p>
+
+<p>Also, Alex is the creator of <a href="https://www.openfaas.com/"><em>OpenFaaS</em></a>, a cloud agnostic Serverless solution. Having worked with Azure Functions recently at my current job, I can definitely see why this is a good idea. A Serverless infrastructure <em>without</em> being tied down to a specific cloud. I want to explore converting a small Web API app to OpenFaaS and experimenting there (I’m actually super excited).</p>
+
+<p>Lastly, when I restart my Code Clubs up, I would like to do a show and tell with something interesting that includes the cluster. I was thinking about running some OpenFaaS functions that “talk” to my Pi robot I’m building and possibly allow you to control it for example.</p>
+
+<p>Lots to do before April arrives!</p>
+
+
+
+
+
+    <hr>
+<span>
+   <div>
+      
+      <div>
+         <h3> Gareth Bradley  AKA garfbradaz &nbsp;
+           
+              <a href="garfbradaz" class="icon fa-twitter"><span class="label">Twitter</span></a> 
+            
+          </h3>
+      </div>
+   </div>
+   Lover of tech, running and Guinness
+</span>
+<br>
+
+
+
+
+
+
+
+
+      </section>
+      <footer>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/assets/js/scale.fix.js"></script>
+    <script src="/assets/js/matrix.js"></script>
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-130935873-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    
+  </body>
+</html>
