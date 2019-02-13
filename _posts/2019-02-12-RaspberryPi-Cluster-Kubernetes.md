@@ -9,7 +9,7 @@ title: Creating Raspberry Pi Cluster to Learn Kubernetes
 ---
 ## Creating Raspberry Pi Cluster to Learn Kubernetes
 
-In August 2018 I bought some Pi's tp create a cluster, mainly after reading and watching [Alex Ellis](https://blog.alexellis.io/build-your-own-bare-metal-arm-cluster/) and [Scott Hansleman's](https://www.hanselman.com/blog/HowToBuildAKubernetesClusterWithARMRaspberryPiThenRunNETCoreOnOpenFaas.aspx) blogs and videos on the subject, which inspired me to make the purchase. I was running Code Clubs at the time, so I thought this would make a good show and tell as well.<!--more-->
+In August 2018 I bought some Pi's tp create a cluster, mainly after reading and watching [Alex Ellis](https://blog.alexellis.io/build-your-own-bare-metal-arm-cluster/) and [Scott Hanselman's](https://www.hanselman.com/blog/HowToBuildAKubernetesClusterWithARMRaspberryPiThenRunNETCoreOnOpenFaas.aspx) blogs and videos on the subject, which inspired me to make the purchase. I was running Code Clubs at the time, so I thought this would make a good show and tell as well.<!--more-->
 
 Both Alex and Scott posts were both inspiring and I really wanted to give it ago. Anyway I got the equipment, but work and real-life got in the way and progress was slow. Then in December 2018 I landed a new job, starting in April this year, and they use Kubernetes extensively so I also had another good reason to get it up and running - to learn Kubernetes!
 
