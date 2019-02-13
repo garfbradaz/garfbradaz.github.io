@@ -4,7 +4,7 @@ author: garfbradaz
 category: blog
 tags: [raspberrypi,kubernetes,openfaas]
 excerpt_separator: <!--more-->
-comment: true
+comments: true
 title: Creating Raspberry Pi Cluster to Learn Kubernetes
 ---
 ## Creating Raspberry Pi Cluster to Learn Kubernetes
