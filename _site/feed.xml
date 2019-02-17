@@ -1,4 +1,379 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://garfbradaz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://garfbradaz.github.io/" rel="alternate" type="text/html" /><updated>2019-02-13T07:51:16+00:00</updated><id>https://garfbradaz.github.io/feed.xml</id><title type="html">Gareth Bradleys Blog</title><subtitle>garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.</subtitle><entry><title type="html">Creating Raspberry Pi Cluster to Learn Kubernetes</title><link href="https://garfbradaz.github.io/blog/2019/02/12/RaspberryPi-Cluster-Kubernetes.html" rel="alternate" type="text/html" title="Creating Raspberry Pi Cluster to Learn Kubernetes" /><published>2019-02-12T00:00:00+00:00</published><updated>2019-02-12T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2019/02/12/RaspberryPi-Cluster-Kubernetes</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2019/02/12/RaspberryPi-Cluster-Kubernetes.html">&lt;h2 id=&quot;creating-raspberry-pi-cluster-to-learn-kubernetes&quot;&gt;Creating Raspberry Pi Cluster to Learn Kubernetes&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-02-17T11:44:41+00:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Gareth Bradleys Blog</title><subtitle>garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.</subtitle><entry><title type="html">Episode 5 - JSON API using ASP.NET Core, Docker &amp;amp; MongoDB - Modelling, Controller and Unit Tests Part I - BookStore</title><link href="http://localhost:4000/blog/2019/02/17/Episode-5-JSON-API-ASP.NET-Modelling-Controller-And-Unit-Tests-BookStore.html" rel="alternate" type="text/html" title="Episode 5 - JSON API using ASP.NET Core, Docker &amp; MongoDB -  Modelling, Controller and Unit Tests Part I - BookStore" /><published>2019-02-17T00:00:00+00:00</published><updated>2019-02-17T00:00:00+00:00</updated><id>http://localhost:4000/blog/2019/02/17/Episode-5-JSON-API-ASP.NET-Modelling-Controller-And-Unit-Tests-BookStore</id><content type="html" xml:base="http://localhost:4000/blog/2019/02/17/Episode-5-JSON-API-ASP.NET-Modelling-Controller-And-Unit-Tests-BookStore.html">&lt;h2 id=&quot;previously-on-dcoding&quot;&gt;Previously on Dcoding&lt;/h2&gt;
+
+&lt;p&gt;In &lt;a href=&quot;/blog/2018/12/31/Episode-4-JSON-API-ASP.NET-Core-Docker-Compose.html&quot;&gt;Episode 4&lt;/a&gt; I set up our &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose&lt;/code&gt; files to allow us to knit together our application and the services it will be use. Today’s episode is focusing on &lt;strong&gt;Modelling, Controller and Unit Tests for the BookStore Object&lt;/strong&gt;. &lt;!--more--&gt;&lt;/p&gt;
+
+&lt;p&gt;Here is a reminder on the sample &lt;em&gt;User Stories / Epics&lt;/em&gt; for phase 1.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;As a &lt;em&gt;book store&lt;/em&gt;
+I can &lt;em&gt;add&lt;/em&gt; our &lt;em&gt;store&lt;/em&gt; to the database
+&lt;em&gt;So&lt;/em&gt; we can be accessible&lt;/p&gt;
+
+  &lt;p&gt;As a &lt;em&gt;book store&lt;/em&gt;
+I can &lt;em&gt;add&lt;/em&gt; our &lt;em&gt;inventory&lt;/em&gt; to our database
+&lt;em&gt;So&lt;/em&gt; we can expose our inventory&lt;/p&gt;
+
+  &lt;p&gt;As a &lt;em&gt;book store&lt;/em&gt;
+We can &lt;em&gt;update&lt;/em&gt; a books stock level
+&lt;em&gt;For&lt;/em&gt; an accurate stock level&lt;/p&gt;
+
+  &lt;p&gt;As a &lt;em&gt;API consumer&lt;/em&gt;
+I can look up a &lt;em&gt;stores address&lt;/em&gt;
+&lt;em&gt;So&lt;/em&gt; we know where to buy a &lt;em&gt;book&lt;/em&gt;&lt;/p&gt;
+
+  &lt;p&gt;As a &lt;em&gt;API consumer&lt;/em&gt;
+I can look up a &lt;em&gt;book&lt;/em&gt;
+&lt;em&gt;So&lt;/em&gt; we can get a &lt;em&gt;list&lt;/em&gt; of &lt;em&gt;stores&lt;/em&gt; who sell a
+&lt;em&gt;book&lt;/em&gt;&lt;/p&gt;
+
+  &lt;p&gt;As &lt;em&gt;book store IT Security&lt;/em&gt;
+We can add &lt;em&gt;API Keys&lt;/em&gt; to the API
+&lt;em&gt;For&lt;/em&gt; API Consumers to use when querying the API&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;dependency-on-mongodb&quot;&gt;Dependency on MongoDB&lt;/h2&gt;
+
+&lt;p&gt;Our application will ultimately be using &lt;em&gt;MongoDB&lt;/em&gt; as its back end data store. We need to take a dependency on the MongoDB driver. This will allow us to communicate with and use MongoDB.&lt;/p&gt;
+
+&lt;p&gt;Using your shell of choice, change directory to &lt;code class=&quot;highlighter-rouge&quot;&gt;../src/api&lt;/code&gt; directory. To recap, our directory structure is:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    .
+    ├── src
+    |   ├── api
+    |       |
+    |       ├── BookStoreApp.WebApi.csproj
+    |       ├── Dockerfile
+    ├── tests
+    |   ├── integration
+    |   ├── unit
+    |       ├── BookStore.Tests.csproj
+    ├── docker
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; Something has changed, can you guess what? Yep that’s right, I have renamed the &lt;code class=&quot;highlighter-rouge&quot;&gt;.csproj&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;BookStoreApp.WebApi.csproj&lt;/code&gt; instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;BookStore.WebApi.csproj&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now run the following command, which will add the latest Nuget package to your api project.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dotnet add package  MongoDB.Driver
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We will be returning to MongoDB once we have the unit test infrastructure set up in the next episode.&lt;/p&gt;
+
+&lt;h2 id=&quot;bookstore&quot;&gt;BookStore&lt;/h2&gt;
+&lt;h3 id=&quot;modelling&quot;&gt;Modelling&lt;/h3&gt;
+
+&lt;p&gt;The first of our models (the &lt;em&gt;M&lt;/em&gt; in &lt;strong&gt;M&lt;/strong&gt;VC), will represent our &lt;strong&gt;BookStore&lt;/strong&gt;. A simple &lt;a href=&quot;https://en.wikipedia.org/wiki/Plain_old_CLR_object&quot;&gt;Plain old C# (POCO)&lt;/a&gt; to represent this:&lt;/p&gt;
+
+&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;c1&quot;&gt;/// &amp;lt;summary&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;/// BookStore POCO.&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;/// &amp;lt;/summary&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;BookStore&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BsonId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ObjectId&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;Id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AddressLine1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AddressLine2&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AddressLine3&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;City&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PostCode&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TelephoneNumber&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;}&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;/// &amp;lt;summary&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;/// Default constructor&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;/// &amp;lt;/summary&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;BookStore&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ObjectId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GenerateNewId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;I added a &lt;code class=&quot;highlighter-rouge&quot;&gt;Model&lt;/code&gt; folder to my &lt;code class=&quot;highlighter-rouge&quot;&gt;../api&lt;/code&gt; folder where this was added. MongoDB uses a serialization format standard called &lt;a href=&quot;https://docs.mongodb.com/manual/reference/glossary/#term-bson&quot;&gt;BSON&lt;/a&gt;. BSON has the idea of &lt;em&gt;types&lt;/em&gt; and one of those types is &lt;a href=&quot;https://docs.mongodb.com/manual/reference/bson-types/#objectid&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ObjectId&lt;/code&gt;&lt;/a&gt; which represents a unique id for the record. You decorate the &lt;code class=&quot;highlighter-rouge&quot;&gt;Id&lt;/code&gt; property with &lt;code class=&quot;highlighter-rouge&quot;&gt;[BsonId]&lt;/code&gt; attribute, to inform the MongoDB driver what field is your &lt;code class=&quot;highlighter-rouge&quot;&gt;BsonId&lt;/code&gt; field.&lt;/p&gt;
+
+&lt;p&gt;I have also created a default constructor that sets that Id up. Now we have created the &lt;code class=&quot;highlighter-rouge&quot;&gt;Models&lt;/code&gt; directory and structure is now the following:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    .
+    ├── src
+    |   ├── api
+    |       ├── Models
+    |           ├── BookStore.cs
+    |       ├── BookStoreApp.WebApi.csproj
+    |       ├── Dockerfile
+    ├── tests
+    |   ├── integration
+    |   ├── unit
+    |       ├── BookStore.Tests.csproj
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;controller&quot;&gt;Controller&lt;/h3&gt;
+
+&lt;p&gt;Now we need to create a &lt;strong&gt;BookStore&lt;/strong&gt; controller. A controller is the &lt;em&gt;C&lt;/em&gt; in MV&lt;strong&gt;C&lt;/strong&gt; pattern. The controller will handle the HTTP requests that come in using &lt;em&gt;Actions&lt;/em&gt;. The HTTP requests are mapped to Actions via the routing pipeline of MVC. For WebAPIs, they map to specific HTTP methods like &lt;code class=&quot;highlighter-rouge&quot;&gt;GET&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;POST&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;PUT&lt;/code&gt; etc.&lt;/p&gt;
+
+&lt;p&gt;ASP.NET expects you to follow conventions when creating your own Controllers:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The Controller class name always ends with &lt;code class=&quot;highlighter-rouge&quot;&gt;Controller&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;The Controller class should reside in a folder called &lt;code class=&quot;highlighter-rouge&quot;&gt;Controllers&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;The Controller class should inherit from &lt;code class=&quot;highlighter-rouge&quot;&gt;Microsoft.AspNetCore.Mvc.ControllerBase&lt;/code&gt; (WebAPI) / &lt;code class=&quot;highlighter-rouge&quot;&gt;Microsoft.AspNetCore.Mvc.Controller&lt;/code&gt; (ASP.NET MVC Apps with Views).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;When you do a &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet new webapi&lt;/code&gt; the templates include a standard &lt;code class=&quot;highlighter-rouge&quot;&gt;ValuesController.cs&lt;/code&gt; that lives in a &lt;code class=&quot;highlighter-rouge&quot;&gt;Controllers&lt;/code&gt; folder. Create a new &lt;code class=&quot;highlighter-rouge&quot;&gt;BookStoreController.cs&lt;/code&gt; file in there:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    .
+    ├── src
+    |   ├── api
+    |       ├── Controllers
+    |           ├── BookStoreController.cs
+    |       ├── Models
+    |           ├── BookStore.cs
+    |       ├── BookStoreApp.WebApi.csproj
+    |       ├── Dockerfile
+    ├── tests
+    |   ├── integration
+    |   ├── unit
+    |       ├── BookStore.Tests.csproj
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To this file I have added the following:&lt;/p&gt;
+
+&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Route&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;api/[controller]&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ApiController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;BookStoreController&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ControllerBase&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// GET api/values&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HttpGet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ActionResult&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bookStore&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BookStore&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BookStore&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Waterstones&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;AddressLine1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;The Dolphin &amp;amp; Anchor&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;AddressLine2&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;West Street&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;City&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Chichester&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;PostCode&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;PO19 1QD&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;TelephoneNumber&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;01234 773030&quot;&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;JsonResult&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bookStore&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Its a simple &lt;code class=&quot;highlighter-rouge&quot;&gt;GET&lt;/code&gt; method that just returns a hard coded &lt;code class=&quot;highlighter-rouge&quot;&gt;BookStore&lt;/code&gt; object. For today’s episode we are just concentrating on getting our unit test infrastructure up and running so we can ignore &lt;code class=&quot;highlighter-rouge&quot;&gt;PUT&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;POST&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;DELETE&lt;/code&gt; until my next episode.&lt;/p&gt;
+
+&lt;h3 id=&quot;unit-tests&quot;&gt;Unit Tests&lt;/h3&gt;
+
+&lt;p&gt;Before we move forward we need to use the &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet&lt;/code&gt; tooling to add a project reference to our tests project. Change directory to &lt;code class=&quot;highlighter-rouge&quot;&gt;tests\unit&lt;/code&gt; and do the following to add a reference:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dotnet add reference ..&lt;span class=&quot;se&quot;&gt;\.&lt;/span&gt;.&lt;span class=&quot;se&quot;&gt;\s&lt;/span&gt;rc&lt;span class=&quot;se&quot;&gt;\a&lt;/span&gt;pi&lt;span class=&quot;se&quot;&gt;\B&lt;/span&gt;ookStoreApp.WebApi.csproj
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;I have also added two basic test methods to cover our new &lt;code class=&quot;highlighter-rouge&quot;&gt;GET&lt;/code&gt; method in oir controller:&lt;/p&gt;
+
+&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ControllerTests&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Fact&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;BookStoreController_Get_Should_Return_ActionResult&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;//Arrange&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;controller&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;BookStoreController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+            &lt;span class=&quot;c1&quot;&gt;//Act&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+            &lt;span class=&quot;c1&quot;&gt;//Assert&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;Assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IsType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;JsonResult&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Fact&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;BookStoreController_Get_Should_Return_Correct_BookStore_Data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;//Arrange&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;controller&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;BookStoreController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+            &lt;span class=&quot;c1&quot;&gt;//Act&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;json&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ToJson&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BookStore&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;();&lt;/span&gt;
+
+            &lt;span class=&quot;c1&quot;&gt;//Assert&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;Assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Waterstones&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;$&quot;Assert failed, received &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;Assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PostCode&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;PO19 1QD&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;$&quot;Assert failed, received &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PostCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;Assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TelephoneNumber&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;01234773030&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;$&quot;Assert failed, received &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TelephoneNumber&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Before we start integrating with Docker, we can test using (you guessed it), the &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet&lt;/code&gt; tooling. Make sure you are in the &lt;code class=&quot;highlighter-rouge&quot;&gt;tests\unit&lt;/code&gt; directory and run:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dotnet restore
+dotnet &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;test&lt;/code&gt; will set off a &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet build&lt;/code&gt; first then run our XUnit tests. One test should fail and this will be outputted similar to this:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Total tests: 2. Passed: 1. Failed: 1. Skipped: 0.&lt;/p&gt;
+
+  &lt;p&gt;Test Run Failed.&lt;/p&gt;
+
+  &lt;p&gt;Test execution time: 2.6340 Seconds&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The error was intentional, there should of been a space in between &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;01234773030&quot;&lt;/code&gt;, I fixed this:&lt;/p&gt;
+
+&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;            &lt;span class=&quot;n&quot;&gt;Assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TelephoneNumber&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;01234 773030&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;$&quot;Assert failed, received &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TelephoneNumber&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Re-run the tests and everything should now be green:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Total tests: 2. Passed: 2. Failed: 0. Skipped: 0.&lt;/p&gt;
+
+  &lt;p&gt;Test Run Successful.&lt;/p&gt;
+
+  &lt;p&gt;Test execution time: 3.1173 Seconds&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Now we have a project with some basic logic within a controller, and a very basic model. We have also started creating some tests to cover this code. Now we need to &lt;em&gt;build and run&lt;/em&gt; the application. We could at this stage use the normal route for that, but as these episodes include &lt;strong&gt;Docker&lt;/strong&gt;, lets integrate what we know into a docker pipeline.&lt;/p&gt;
+
+&lt;h2 id=&quot;docker&quot;&gt;Docker&lt;/h2&gt;
+
+&lt;p&gt;Firstly in the root of the project create a new Docker file. Your project structure should look like this now:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    .
+    ├── src
+    ├── tests
+    ├── Dockerfile
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Here we will create a multi-stage &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; that will restore, build and run our tests. Here is the first stage:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-Dockerfile&quot;&gt;FROM microsoft/dotnet:2.2-sdk AS build-env
+WORKDIR /app
+
+COPY src/api/BookStoreApp.WebApi.csproj ./src/api/
+RUN dotnet restore ./src/api/BookStoreApp.WebApi.csproj
+COPY tests/unit/BookStore.Tests.csproj ./tests/unit/
+RUN dotnet restore ./tests/unit/BookStore.Tests.csproj
+
+COPY . .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You should be familiar with this now from previous episodes. This time take note that we are copying the unit test project files in to the build context. Also note we need to keep the same directory structure as before, because we added a &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet add reference&lt;/code&gt; previously into the test project. If the directories didn’t match we would get build errors.&lt;/p&gt;
+
+&lt;p&gt;Run the following:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; docker build &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; test-ep5 &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now do a &lt;code class=&quot;highlighter-rouge&quot;&gt;docker image&lt;/code&gt; and you will see a massive image there:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/posts/test-ep5-size.png&quot; alt=&quot;test-5 image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Docker has a way of managing this, meet &lt;code class=&quot;highlighter-rouge&quot;&gt;.dockerignore&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;dockerignore&quot;&gt;.dockerignore&lt;/h3&gt;
+
+&lt;p&gt;This file behaves similarly to a &lt;code class=&quot;highlighter-rouge&quot;&gt;.gitignore&lt;/code&gt;. It tells docker which files to not copying in during a  build. So how do you know which files to ignore, well I learnt a good trick from &lt;a href=&quot;https://twitter.com/g0t4&quot;&gt;Wes Higbee&lt;/a&gt; by passing in a &lt;code class=&quot;highlighter-rouge&quot;&gt;ls alR&lt;/code&gt; to list out your directories. Run the following:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run &lt;span class=&quot;nt&quot;&gt;--rm&lt;/span&gt; test-ep5 &lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-alR&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This will list out your containers file system, and you can easily see what is copied in. So things like &lt;code class=&quot;highlighter-rouge&quot;&gt;.vscode&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;.git&lt;/code&gt; folders and &lt;code class=&quot;highlighter-rouge&quot;&gt;bin&lt;/code&gt; directories. None of this stuff is needed during the build stage of this multi stage &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt;, so lets exclude it, using similar glob patterns you can use in &lt;code class=&quot;highlighter-rouge&quot;&gt;.gitignore&lt;/code&gt; files. Add a &lt;code class=&quot;highlighter-rouge&quot;&gt;.dockerignore&lt;/code&gt; file to your root:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    .
+    ├── src
+    ├── tests
+    ├── Dockerfile
+    ├── .dockerignore
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then add the following, excluding files and artefacts that are not needed for a restore and build. We exclude things like our &lt;code class=&quot;highlighter-rouge&quot;&gt;docker&lt;/code&gt; folder and &lt;code class=&quot;highlighter-rouge&quot;&gt;.ps1&lt;/code&gt; scripts we have been using. Plus the &lt;code class=&quot;highlighter-rouge&quot;&gt;README.md&lt;/code&gt; and dockerfiles.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;**/.vscode/
+**/.git/
+docker/
+**/bin/
+**/obj/
+**/.dockerignore/
+**/Dockerfile*
+**/docker-compose*.yml/
+run.ps1
+clean.ps1
+README.md
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Re-run:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; docker build &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; test-ep5 &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+ docker run &lt;span class=&quot;nt&quot;&gt;--rm&lt;/span&gt; test-ep5 &lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-alR&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You will see a cleaner build plus about 100MB less space than previously:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/posts/test-ep5-size-2.png&quot; alt=&quot;test-5 image&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;unit-tests-in-docker&quot;&gt;Unit Tests in Docker&lt;/h2&gt;
+
+&lt;p&gt;So now we have pruned our Image, we can add our tests to our &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt;. Add the following into your &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-dockerfile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;dotnet &lt;span class=&quot;nb&quot;&gt;test &lt;/span&gt;tests/unit/BookStore.Tests.csproj
+&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;dotnet publish src/api/BookStoreApp.WebApi.csproj &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; /publish
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We run what we ran on the commandline early (see no magic). This will run out unit tests, then if they pass, we will publish a new release ready for our 2nd stage to use, by running  &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet publish&lt;/code&gt; and outputting to a new &lt;code class=&quot;highlighter-rouge&quot;&gt;/publish&lt;/code&gt; directory.&lt;/p&gt;
+
+&lt;p&gt;Run again using the following and see your test success!&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; docker build &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; test-ep5 &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;running-your-application&quot;&gt;Running your application&lt;/h3&gt;
+
+&lt;p&gt;In previous episodes we had a multi stage &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; with a 2nd stage that runs the application itself. No different here, our 2nd stage allows us to run our application.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;NB:&lt;/strong&gt; Once we have added this, we cannot use our &lt;strong&gt;“ls aLR”&lt;/strong&gt; trick Wes taught us, as our &lt;code class=&quot;highlighter-rouge&quot;&gt;ENTRYPOINT&lt;/code&gt; will be set with &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet&lt;/code&gt;. Also the 1st build stage is thrown away once used so we cannot access the directory fully anyway.&lt;/p&gt;
+
+&lt;p&gt;Add the following to your &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; which is our runtime stage:&lt;/p&gt;
+
+&lt;div class=&quot;language-dockerfile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; microsoft/dotnet:2.2-aspnetcore-runtime AS runtime-env&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;WORKDIR&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; /publish&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;COPY&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; --from=build-env /publish .&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;ENTRYPOINT&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; [ &quot;dotnet&quot;,&quot;BookStoreApp.WebApi.dll&quot; ]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Rebuild the Image first:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; docker build &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; test-ep5 &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then we can run the Image as a container process, overriding some of the ASP.NET Core environment variables using &lt;code class=&quot;highlighter-rouge&quot;&gt;-e&lt;/code&gt;. We would override these usually when using &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;ASPNETCORE_ENVIRONMENT=Development&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;ASPNETCORE_URLS=http://+:5003&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 5003:5003 &lt;span class=&quot;nt&quot;&gt;--rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-it&lt;/span&gt; test-ep5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You can then use your application of choice (I’m using Postman, more to come on that) to hit &lt;a href=&quot;http://localhost:5003/api/bookstore&quot;&gt;http://localhost:5003/api/bookstore&lt;/a&gt;. You should receive the following JSON payload:&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;5c6947093497a200016c0dee&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Waterstones&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;addressLine1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;The Dolphin &amp;amp; Anchor&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;addressLine2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;West Street&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;addressLine3&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;city&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Chichester&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;postCode&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PO19 1QD&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;telephoneNumber&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;01234 773030&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;next-time&quot;&gt;Next time&lt;/h2&gt;
+
+&lt;p&gt;That’s it for today. Remember all code is on &lt;a href=&quot;https://github.com/garfbradaz/webapi-episodes/tree/master/episode-5&quot;&gt;Github&lt;/a&gt; if you want it.&lt;/p&gt;
+
+&lt;p&gt;On our next episode we will start integrating MongoDB into the application.&lt;/p&gt;</content><author><name>gareth</name></author><category term="blog" /><category term="how-to" /><category term="dotnetcore" /><category term="beginners" /><category term="api" /><category term="mongodb" /><category term="aspnetcore" /><category term="unittests" /><summary type="html">Previously on Dcoding In Episode 4 I set up our docker-compose files to allow us to knit together our application and the services it will be use. Today’s episode is focusing on Modelling, Controller and Unit Tests for the BookStore Object.</summary></entry><entry><title type="html">Creating Raspberry Pi Cluster to Learn Kubernetes</title><link href="http://localhost:4000/blog/2019/02/12/RaspberryPi-Cluster-Kubernetes.html" rel="alternate" type="text/html" title="Creating Raspberry Pi Cluster to Learn Kubernetes" /><published>2019-02-12T00:00:00+00:00</published><updated>2019-02-12T00:00:00+00:00</updated><id>http://localhost:4000/blog/2019/02/12/RaspberryPi-Cluster-Kubernetes</id><content type="html" xml:base="http://localhost:4000/blog/2019/02/12/RaspberryPi-Cluster-Kubernetes.html">&lt;h2 id=&quot;creating-raspberry-pi-cluster-to-learn-kubernetes&quot;&gt;Creating Raspberry Pi Cluster to Learn Kubernetes&lt;/h2&gt;
 
 &lt;p&gt;In August 2018 I bought some Pi’s tp create a cluster, mainly after reading and watching &lt;a href=&quot;https://blog.alexellis.io/build-your-own-bare-metal-arm-cluster/&quot;&gt;Alex Ellis&lt;/a&gt; and &lt;a href=&quot;https://www.hanselman.com/blog/HowToBuildAKubernetesClusterWithARMRaspberryPiThenRunNETCoreOnOpenFaas.aspx&quot;&gt;Scott Hanselman’s&lt;/a&gt; blogs and videos on the subject, which inspired me to make the purchase. I was running Code Clubs at the time, so I thought this would make a good show and tell as well.&lt;!--more--&gt;&lt;/p&gt;
 
@@ -25,7 +400,7 @@
 
 &lt;p&gt;Lastly, when I restart my Code Clubs up, I would like to do a show and tell with something interesting that includes the cluster. I was thinking about running some OpenFaaS functions that “talk” to my Pi robot I’m building and possibly allow you to control it for example.&lt;/p&gt;
 
-&lt;p&gt;Lots to do before April arrives!&lt;/p&gt;</content><author><name>garfbradaz</name></author><category term="blog" /><category term="raspberrypi" /><category term="kubernetes" /><category term="openfaas" /><summary type="html">Creating Raspberry Pi Cluster to Learn Kubernetes In August 2018 I bought some Pi’s tp create a cluster, mainly after reading and watching Alex Ellis and Scott Hanselman’s blogs and videos on the subject, which inspired me to make the purchase. I was running Code Clubs at the time, so I thought this would make a good show and tell as well.</summary></entry><entry><title type="html">Episode 4 - JSON API using ASP.NET Core, Docker &amp;amp; MongoDB - Docker Part II Docker Compose</title><link href="https://garfbradaz.github.io/blog/2018/12/31/Episode-4-JSON-API-ASP.NET-Core-Docker-Compose.html" rel="alternate" type="text/html" title="Episode 4 - JSON API using ASP.NET Core, Docker &amp; MongoDB -  Docker Part II Docker Compose" /><published>2018-12-31T00:00:00+00:00</published><updated>2018-12-31T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/31/Episode-4-JSON-API-ASP.NET-Core-Docker-Compose</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/31/Episode-4-JSON-API-ASP.NET-Core-Docker-Compose.html">&lt;h2 id=&quot;previously-on-dcoding&quot;&gt;Previously on Dcoding&lt;/h2&gt;
+&lt;p&gt;Lots to do before April arrives!&lt;/p&gt;</content><author><name>garfbradaz</name></author><category term="blog" /><category term="raspberrypi" /><category term="kubernetes" /><category term="openfaas" /><summary type="html">Creating Raspberry Pi Cluster to Learn Kubernetes In August 2018 I bought some Pi’s tp create a cluster, mainly after reading and watching Alex Ellis and Scott Hanselman’s blogs and videos on the subject, which inspired me to make the purchase. I was running Code Clubs at the time, so I thought this would make a good show and tell as well.</summary></entry><entry><title type="html">Episode 4 - JSON API using ASP.NET Core, Docker &amp;amp; MongoDB - Docker Part II Docker Compose</title><link href="http://localhost:4000/blog/2018/12/31/Episode-4-JSON-API-ASP.NET-Core-Docker-Compose.html" rel="alternate" type="text/html" title="Episode 4 - JSON API using ASP.NET Core, Docker &amp; MongoDB -  Docker Part II Docker Compose" /><published>2018-12-31T00:00:00+00:00</published><updated>2018-12-31T00:00:00+00:00</updated><id>http://localhost:4000/blog/2018/12/31/Episode-4-JSON-API-ASP.NET-Core-Docker-Compose</id><content type="html" xml:base="http://localhost:4000/blog/2018/12/31/Episode-4-JSON-API-ASP.NET-Core-Docker-Compose.html">&lt;h2 id=&quot;previously-on-dcoding&quot;&gt;Previously on Dcoding&lt;/h2&gt;
 
 &lt;p&gt;In &lt;a href=&quot;/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker-Setting-Up-Docker-DockerFiles.html&quot;&gt;Episode 3&lt;/a&gt; I set up our Dockerfiles for creating our &lt;em&gt;Docker Images&lt;/em&gt; for our BookStore app. This will allow us to rapidly test our application as we move forward in later Episodes. Today’s episode is &lt;strong&gt;Docker Part 2: Docking Compose&lt;/strong&gt;. &lt;!--more--&gt;&lt;/p&gt;
 
@@ -233,7 +608,7 @@
 
 &lt;p&gt;That’s it for today. Remember all code is on &lt;a href=&quot;https://github.com/garfbradaz/webapi-episodes/tree/master/episode-4&quot;&gt;Github&lt;/a&gt; if you want it.&lt;/p&gt;
 
-&lt;p&gt;Now we have our architecture spun up and ready, we can start building some ASP.NET Core code (using C#) to start creating our Models for our &lt;em&gt;BookStore.WebApi&lt;/em&gt;. We will also start creating some unit tests and creating the shape of our API.&lt;/p&gt;</content><author><name>garfbradaz</name></author><category term="blog" /><category term="how-to" /><category term="dotnetcore" /><category term="beginners" /><category term="api" /><category term="docker-compose" /><category term="mongodb" /><summary type="html">Previously on Dcoding In Episode 3 I set up our Dockerfiles for creating our Docker Images for our BookStore app. This will allow us to rapidly test our application as we move forward in later Episodes. Today’s episode is Docker Part 2: Docking Compose.</summary></entry><entry><title type="html">Episode 3 - JSON API using ASP.NET Core, Docker &amp;amp; MongoDB - Docker Part I Dockerfiles</title><link href="https://garfbradaz.github.io/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker-Setting-Up-Docker-DockerFiles.html" rel="alternate" type="text/html" title="Episode 3 - JSON API using ASP.NET Core, Docker &amp; MongoDB - Docker Part I  Dockerfiles" /><published>2018-12-29T00:00:00+00:00</published><updated>2018-12-29T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker--Setting-Up-Docker--DockerFiles</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker-Setting-Up-Docker-DockerFiles.html">&lt;h2 id=&quot;previously-on-dcoding&quot;&gt;Previously on Dcoding&lt;/h2&gt;
+&lt;p&gt;Now we have our architecture spun up and ready, we can start building some ASP.NET Core code (using C#) to start creating our Models for our &lt;em&gt;BookStore.WebApi&lt;/em&gt;. We will also start creating some unit tests and creating the shape of our API.&lt;/p&gt;</content><author><name>garfbradaz</name></author><category term="blog" /><category term="how-to" /><category term="dotnetcore" /><category term="beginners" /><category term="api" /><category term="docker-compose" /><category term="mongodb" /><summary type="html">Previously on Dcoding In Episode 3 I set up our Dockerfiles for creating our Docker Images for our BookStore app. This will allow us to rapidly test our application as we move forward in later Episodes. Today’s episode is Docker Part 2: Docking Compose.</summary></entry><entry><title type="html">Episode 3 - JSON API using ASP.NET Core, Docker &amp;amp; MongoDB - Docker Part I Dockerfiles</title><link href="http://localhost:4000/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker-Setting-Up-Docker-DockerFiles.html" rel="alternate" type="text/html" title="Episode 3 - JSON API using ASP.NET Core, Docker &amp; MongoDB - Docker Part I  Dockerfiles" /><published>2018-12-29T00:00:00+00:00</published><updated>2018-12-29T00:00:00+00:00</updated><id>http://localhost:4000/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker--Setting-Up-Docker--DockerFiles</id><content type="html" xml:base="http://localhost:4000/blog/2018/12/29/Episode-3-JSON-API-ASP.NET-Core-Docker-Setting-Up-Docker-DockerFiles.html">&lt;h2 id=&quot;previously-on-dcoding&quot;&gt;Previously on Dcoding&lt;/h2&gt;
 
 &lt;p&gt;In &lt;a href=&quot;/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html&quot;&gt;Episode 2&lt;/a&gt; I set up the project directory structure. Today’s episode is &lt;strong&gt;Docker Part 1: DockerFiles&lt;/strong&gt;. &lt;!--more--&gt;&lt;/p&gt;
 
@@ -436,7 +811,7 @@ COPY . .
 
 &lt;h3 id=&quot;next-time&quot;&gt;Next time&lt;/h3&gt;
 
-&lt;p&gt;We will be exploring &lt;code class=&quot;highlighter-rouge&quot;&gt;docker compose&lt;/code&gt; to allow us to run and knit together multiple containers together so we can interact with MongoDB for example.&lt;/p&gt;</content><author><name>garfbradaz</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><category term="api" /><category term="dockerfiles" /><summary type="html">Previously on Dcoding In Episode 2 I set up the project directory structure. Today’s episode is Docker Part 1: DockerFiles.</summary></entry><entry><title type="html">Release Notes - Update 1</title><link href="https://garfbradaz.github.io/blog/2018/12/29/release-notes-update-1-garfbradaz-blog.html" rel="alternate" type="text/html" title="Release Notes - Update 1" /><published>2018-12-29T00:00:00+00:00</published><updated>2018-12-29T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/29/release-notes-update-1-garfbradaz-blog</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/29/release-notes-update-1-garfbradaz-blog.html">&lt;h2 id=&quot;release-notes---update-1&quot;&gt;Release Notes - Update 1&lt;/h2&gt;
+&lt;p&gt;We will be exploring &lt;code class=&quot;highlighter-rouge&quot;&gt;docker compose&lt;/code&gt; to allow us to run and knit together multiple containers together so we can interact with MongoDB for example.&lt;/p&gt;</content><author><name>garfbradaz</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><category term="api" /><category term="dockerfiles" /><summary type="html">Previously on Dcoding In Episode 2 I set up the project directory structure. Today’s episode is Docker Part 1: DockerFiles.</summary></entry><entry><title type="html">Release Notes - Update 1</title><link href="http://localhost:4000/blog/2018/12/29/release-notes-update-1-garfbradaz-blog.html" rel="alternate" type="text/html" title="Release Notes - Update 1" /><published>2018-12-29T00:00:00+00:00</published><updated>2018-12-29T00:00:00+00:00</updated><id>http://localhost:4000/blog/2018/12/29/release-notes-update-1-garfbradaz-blog</id><content type="html" xml:base="http://localhost:4000/blog/2018/12/29/release-notes-update-1-garfbradaz-blog.html">&lt;h2 id=&quot;release-notes---update-1&quot;&gt;Release Notes - Update 1&lt;/h2&gt;
 
 &lt;p&gt;Whenever I do an update to this blog itself, I will be providing some Release Notes on changes, including where possible, what I have done, as this may be helpful to someone else. &lt;!--more--&gt;&lt;/p&gt;
 
@@ -509,7 +884,7 @@ COPY . .
   &lt;li&gt;Voila, you will have a nice comment at the bottom of your page:&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/img/posts/disqus.png&quot; alt=&quot;disqus&quot; /&gt;&lt;/p&gt;</content><author><name>garfbradaz</name></author><category term="blog" /><category term="release-notes" /><category term="disqus" /><summary type="html">Release Notes - Update 1 Whenever I do an update to this blog itself, I will be providing some Release Notes on changes, including where possible, what I have done, as this may be helpful to someone else.</summary></entry><entry><title type="html">Episode 2 - JSON API using ASP.NET Core, Docker &amp;amp; MongoDB - Project Structure</title><link href="https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html" rel="alternate" type="text/html" title="Episode 2 - JSON API using ASP.NET Core, Docker &amp;  MongoDB -  Project Structure" /><published>2018-12-19T00:00:00+00:00</published><updated>2018-12-19T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker---Project-Structure</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html">&lt;h2 id=&quot;previously-on-decoding&quot;&gt;Previously on Decoding&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/posts/disqus.png&quot; alt=&quot;disqus&quot; /&gt;&lt;/p&gt;</content><author><name>garfbradaz</name></author><category term="blog" /><category term="release-notes" /><category term="disqus" /><summary type="html">Release Notes - Update 1 Whenever I do an update to this blog itself, I will be providing some Release Notes on changes, including where possible, what I have done, as this may be helpful to someone else.</summary></entry><entry><title type="html">Episode 2 - JSON API using ASP.NET Core, Docker &amp;amp; MongoDB - Project Structure</title><link href="http://localhost:4000/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html" rel="alternate" type="text/html" title="Episode 2 - JSON API using ASP.NET Core, Docker &amp;  MongoDB -  Project Structure" /><published>2018-12-19T00:00:00+00:00</published><updated>2018-12-19T00:00:00+00:00</updated><id>http://localhost:4000/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker---Project-Structure</id><content type="html" xml:base="http://localhost:4000/blog/2018/12/19/Episode-2-JSON-API-Dotnet-Core-Docker-Project-Structure.html">&lt;h2 id=&quot;previously-on-decoding&quot;&gt;Previously on Decoding&lt;/h2&gt;
 
 &lt;p&gt;In &lt;a href=&quot;/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html&quot;&gt;Episode 1&lt;/a&gt; I set the scene for what this series will contain. Today’s episode is simply on setting your &lt;em&gt;directory&lt;/em&gt; structure and creating the relevant projects. &lt;!--more--&gt;&lt;/p&gt;
 
@@ -593,7 +968,7 @@ COPY . .
 
 &lt;p&gt;So now we have set up our Project directory structure, we can move on to setting up our &lt;strong&gt;Docker&lt;/strong&gt; environment, using &lt;em&gt;Dockerfiles&lt;/em&gt; and &lt;em&gt;docker-compose&lt;/em&gt;. Join me next time.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Side note:&lt;/strong&gt; Episode 2 can be found on my &lt;a href=&quot;https://github.com/garfbradaz/webapi-episodes&quot;&gt;Github Repository&lt;/a&gt;&lt;/p&gt;</content><author><name>garfbradaz</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><category term="api" /><summary type="html">Previously on Decoding In Episode 1 I set the scene for what this series will contain. Today’s episode is simply on setting your directory structure and creating the relevant projects.</summary></entry><entry><title type="html">Episode 1 - JSON API using ASP.NET Core, Docker &amp;amp; MongoDB</title><link href="https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html" rel="alternate" type="text/html" title="Episode 1 - JSON API using ASP.NET Core, Docker &amp; MongoDB" /><published>2018-12-18T00:00:00+00:00</published><updated>2018-12-18T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html">&lt;h2 id=&quot;inspiration&quot;&gt;Inspiration&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Side note:&lt;/strong&gt; Episode 2 can be found on my &lt;a href=&quot;https://github.com/garfbradaz/webapi-episodes&quot;&gt;Github Repository&lt;/a&gt;&lt;/p&gt;</content><author><name>garfbradaz</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><category term="api" /><summary type="html">Previously on Decoding In Episode 1 I set the scene for what this series will contain. Today’s episode is simply on setting your directory structure and creating the relevant projects.</summary></entry><entry><title type="html">Episode 1 - JSON API using ASP.NET Core, Docker &amp;amp; MongoDB</title><link href="http://localhost:4000/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html" rel="alternate" type="text/html" title="Episode 1 - JSON API using ASP.NET Core, Docker &amp; MongoDB" /><published>2018-12-18T00:00:00+00:00</published><updated>2018-12-18T00:00:00+00:00</updated><id>http://localhost:4000/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker</id><content type="html" xml:base="http://localhost:4000/blog/2018/12/18/Episode-1-json-api-dotnet-core-docker.html">&lt;h2 id=&quot;inspiration&quot;&gt;Inspiration&lt;/h2&gt;
 
 &lt;p&gt;There is a series on &lt;a href=&quot;https://dev.o&quot;&gt;dev.to&lt;/a&gt; that I have followed by &lt;a href=&quot;https://dev.to/nathanabland&quot;&gt;Nathan Bland&lt;/a&gt; who has recorded as series of videos around creating a JSON API, using &lt;em&gt;Node.js&lt;/em&gt;, &lt;em&gt;docker&lt;/em&gt; and &lt;em&gt;Express&lt;/em&gt;. &lt;!--more--&gt;&lt;/p&gt;
 
@@ -695,7 +1070,7 @@ We can add &lt;em&gt;API Keys&lt;/em&gt; to the API
 
 &lt;h2 id=&quot;next-time&quot;&gt;Next time&lt;/h2&gt;
 
-&lt;p&gt;We will create the &lt;em&gt;ASP.NET Core WebAPI&lt;/em&gt; template, set up the project structure. Join me next time!.&lt;/p&gt;</content><author><name>garfbradaz</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><category term="api" /><summary type="html">Inspiration There is a series on dev.to that I have followed by Nathan Bland who has recorded as series of videos around creating a JSON API, using Node.js, docker and Express.</summary></entry><entry><title type="html">Debug .NET Core in Docker using Visual Studio Code</title><link href="https://garfbradaz.github.io/blog/2018/12/13/debug-dotnet-core-in-docker.html" rel="alternate" type="text/html" title="Debug .NET Core in Docker using Visual Studio Code" /><published>2018-12-13T00:00:00+00:00</published><updated>2018-12-13T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/13/debug-dotnet-core-in-docker</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/13/debug-dotnet-core-in-docker.html">&lt;h2 id=&quot;debugging-aspnet-core-in-a-linux-docker-with-visual-studio-code&quot;&gt;Debugging ASP.NET Core in a Linux Docker with Visual Studio Code&lt;/h2&gt;
+&lt;p&gt;We will create the &lt;em&gt;ASP.NET Core WebAPI&lt;/em&gt; template, set up the project structure. Join me next time!.&lt;/p&gt;</content><author><name>garfbradaz</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><category term="api" /><summary type="html">Inspiration There is a series on dev.to that I have followed by Nathan Bland who has recorded as series of videos around creating a JSON API, using Node.js, docker and Express.</summary></entry><entry><title type="html">Debug .NET Core in Docker using Visual Studio Code</title><link href="http://localhost:4000/blog/2018/12/13/debug-dotnet-core-in-docker.html" rel="alternate" type="text/html" title="Debug .NET Core in Docker using Visual Studio Code" /><published>2018-12-13T00:00:00+00:00</published><updated>2018-12-13T00:00:00+00:00</updated><id>http://localhost:4000/blog/2018/12/13/debug-dotnet-core-in-docker</id><content type="html" xml:base="http://localhost:4000/blog/2018/12/13/debug-dotnet-core-in-docker.html">&lt;h2 id=&quot;debugging-aspnet-core-in-a-linux-docker-with-visual-studio-code&quot;&gt;Debugging ASP.NET Core in a Linux Docker with Visual Studio Code&lt;/h2&gt;
 
 &lt;p&gt;So, you have started using Docker for your .NET Core applications - awesome news. You are using Linux Containers, and Visual Studio Code, and you then go to Debug your container…..oh. &lt;!--more--&gt; (I’m using Windows).&lt;/p&gt;
 
@@ -870,7 +1245,7 @@ cross-platform .NET Core applications.&lt;/p&gt;
 
 &lt;p&gt;I find that it can hang and take half a minute sometimes for the debug session to initiate, so bear with it.&lt;/p&gt;
 
-&lt;p&gt;Anyway I hope this helps someone, and a massive thank you to &lt;a href=&quot;https://twitter.com/jchannon&quot;&gt;Jonathan&lt;/a&gt; and &lt;a href=&quot;https://twitter.com/rbanks54&quot;&gt;Richard&lt;/a&gt;.&lt;/p&gt;</content><author><name>garfbradaz</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><summary type="html">Debugging ASP.NET Core in a Linux Docker with Visual Studio Code So, you have started using Docker for your .NET Core applications - awesome news. You are using Linux Containers, and Visual Studio Code, and you then go to Debug your container…..oh.</summary></entry><entry><title type="html">Setting Up Github Pages Jekyll And Using Windows Subsystem For Linux</title><link href="https://garfbradaz.github.io/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux.html" rel="alternate" type="text/html" title="Setting Up Github Pages Jekyll And Using Windows Subsystem For Linux" /><published>2018-12-12T00:00:00+00:00</published><updated>2018-12-12T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux.html">&lt;h2 id=&quot;setting-up-github-pages-jekyll-and-using-windows-subsystem-for-linux&quot;&gt;Setting up Github Pages, Jekyll and using Windows Subsystem for Linux&lt;/h2&gt;
+&lt;p&gt;Anyway I hope this helps someone, and a massive thank you to &lt;a href=&quot;https://twitter.com/jchannon&quot;&gt;Jonathan&lt;/a&gt; and &lt;a href=&quot;https://twitter.com/rbanks54&quot;&gt;Richard&lt;/a&gt;.&lt;/p&gt;</content><author><name>garfbradaz</name></author><category term="blog" /><category term="how-to" /><category term="dotnet-core" /><category term="beginners" /><summary type="html">Debugging ASP.NET Core in a Linux Docker with Visual Studio Code So, you have started using Docker for your .NET Core applications - awesome news. You are using Linux Containers, and Visual Studio Code, and you then go to Debug your container…..oh.</summary></entry><entry><title type="html">Setting Up Github Pages Jekyll And Using Windows Subsystem For Linux</title><link href="http://localhost:4000/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux.html" rel="alternate" type="text/html" title="Setting Up Github Pages Jekyll And Using Windows Subsystem For Linux" /><published>2018-12-12T00:00:00+00:00</published><updated>2018-12-12T00:00:00+00:00</updated><id>http://localhost:4000/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux</id><content type="html" xml:base="http://localhost:4000/blog/2018/12/12/Setting-up-Github-Pages-Jekyll-and-using-Windows-Subsystem-for-Linux.html">&lt;h2 id=&quot;setting-up-github-pages-jekyll-and-using-windows-subsystem-for-linux&quot;&gt;Setting up Github Pages, Jekyll and using Windows Subsystem for Linux&lt;/h2&gt;
 
 &lt;p&gt;The 1st &lt;em&gt;how to&lt;/em&gt; for setting up the blog and tools needed to edit it. I’m a Windows fan (I love my Surface devices), but I’m also starting to appreciate Linux &lt;!--more--&gt;, so this is a perfect opportunity to set up my Surface Book to use &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/wsl/faq&quot;&gt;Windows Subsystem for Linux&lt;/a&gt;, which allows you command line access to Linux. I’m assured this is not a virtual machine, but a &lt;a href=&quot;https://blogs.msdn.microsoft.com/wsl/2016/04/22/windows-subsystem-for-linux-overview/&quot;&gt;syscall mapping between Windows and Linux itself&lt;/a&gt;, to actual Linux binaries themselves.&lt;/p&gt;
 
@@ -1196,7 +1571,7 @@ git push origin
 
 &lt;p&gt;&lt;a href=&quot;https://jekyllrb.com/docs/installation/ubuntu/&quot;&gt;Jekyll Docs - Ubuntu&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;https://jekyllrb.com/docs/&quot;&gt;Jekyll Docs&lt;/a&gt;&lt;/p&gt;</content><author><name>garfbradaz</name></author><category term="blog" /><category term="jekyll" /><category term="release-notes" /><category term="how-to" /><summary type="html">Setting up Github Pages, Jekyll and using Windows Subsystem for Linux The 1st how to for setting up the blog and tools needed to edit it. I’m a Windows fan (I love my Surface devices), but I’m also starting to appreciate Linux</summary></entry><entry><title type="html">Arise New Blog</title><link href="https://garfbradaz.github.io/blog/2018/12/07/Arise-New-Blog.html" rel="alternate" type="text/html" title="Arise New Blog" /><published>2018-12-07T00:00:00+00:00</published><updated>2018-12-07T00:00:00+00:00</updated><id>https://garfbradaz.github.io/blog/2018/12/07/Arise-New-Blog</id><content type="html" xml:base="https://garfbradaz.github.io/blog/2018/12/07/Arise-New-Blog.html">&lt;h2 id=&quot;its-alive&quot;&gt;It’s alive!&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://jekyllrb.com/docs/&quot;&gt;Jekyll Docs&lt;/a&gt;&lt;/p&gt;</content><author><name>garfbradaz</name></author><category term="blog" /><category term="jekyll" /><category term="release-notes" /><category term="how-to" /><summary type="html">Setting up Github Pages, Jekyll and using Windows Subsystem for Linux The 1st how to for setting up the blog and tools needed to edit it. I’m a Windows fan (I love my Surface devices), but I’m also starting to appreciate Linux</summary></entry><entry><title type="html">Arise New Blog</title><link href="http://localhost:4000/blog/2018/12/07/Arise-New-Blog.html" rel="alternate" type="text/html" title="Arise New Blog" /><published>2018-12-07T00:00:00+00:00</published><updated>2018-12-07T00:00:00+00:00</updated><id>http://localhost:4000/blog/2018/12/07/Arise-New-Blog</id><content type="html" xml:base="http://localhost:4000/blog/2018/12/07/Arise-New-Blog.html">&lt;h2 id=&quot;its-alive&quot;&gt;It’s alive!&lt;/h2&gt;
 
 &lt;p&gt;I have wanted to move &lt;a href=&quot;https://mywebanecdotes.com/&quot;&gt;my current&lt;/a&gt; off Wordpress for sometime, &lt;!--more--&gt;, but time has always been a factor. As a developer I find myself living within &lt;em&gt;Visual Studio Code&lt;/em&gt;, so I decided to set up a blog which can:&lt;/p&gt;
 

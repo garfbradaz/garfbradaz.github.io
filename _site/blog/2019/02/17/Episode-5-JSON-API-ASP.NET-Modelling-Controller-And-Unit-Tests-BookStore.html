@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Gareth Bradleys Blog" />
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Episode 5 - JSON API using ASP.NET Core, Docker &amp; MongoDB - Modelling, Controller and Unit Tests Part I - BookStore | Gareth Bradleys Blog</title>
+<meta name="generator" content="Jekyll v3.7.4" />
+<meta property="og:title" content="Episode 5 - JSON API using ASP.NET Core, Docker &amp; MongoDB - Modelling, Controller and Unit Tests Part I - BookStore" />
+<meta name="author" content="gareth" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Previously on Dcoding In Episode 4 I set up our docker-compose files to allow us to knit together our application and the services it will be use. Today’s episode is focusing on Modelling, Controller and Unit Tests for the BookStore Object." />
+<meta property="og:description" content="Previously on Dcoding In Episode 4 I set up our docker-compose files to allow us to knit together our application and the services it will be use. Today’s episode is focusing on Modelling, Controller and Unit Tests for the BookStore Object." />
+<link rel="canonical" href="http://localhost:4000/blog/2019/02/17/Episode-5-JSON-API-ASP.NET-Modelling-Controller-And-Unit-Tests-BookStore.html" />
+<meta property="og:url" content="http://localhost:4000/blog/2019/02/17/Episode-5-JSON-API-ASP.NET-Modelling-Controller-And-Unit-Tests-BookStore.html" />
+<meta property="og:site_name" content="Gareth Bradleys Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-02-17T00:00:00+00:00" />
+<script type="application/ld+json">
+{"description":"Previously on Dcoding In Episode 4 I set up our docker-compose files to allow us to knit together our application and the services it will be use. Today’s episode is focusing on Modelling, Controller and Unit Tests for the BookStore Object.","author":{"@type":"Person","name":"gareth"},"@type":"BlogPosting","url":"http://localhost:4000/blog/2019/02/17/Episode-5-JSON-API-ASP.NET-Modelling-Controller-And-Unit-Tests-BookStore.html","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/new.png"},"name":"gareth"},"headline":"Episode 5 - JSON API using ASP.NET Core, Docker &amp; MongoDB - Modelling, Controller and Unit Tests Part I - BookStore","dateModified":"2019-02-17T00:00:00+00:00","datePublished":"2019-02-17T00:00:00+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/blog/2019/02/17/Episode-5-JSON-API-ASP.NET-Modelling-Controller-And-Unit-Tests-BookStore.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <link rel="stylesheet" href="/assets/css/matrix.css?v=">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130935873-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-130935873-1');
+    </script>
+    <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="http://localhost:4000/">Gareth Bradleys Blog</a></h1>
+        <nav>
+  
+    <a href="/" >
+      Home
+    </a>
+  
+    <a href="/about.html" >
+      About
+    </a>
+  
+    <a href="/blog.html" >
+      Blog
+    </a>
+  
+</nav>
+
+        
+          <img src="/assets/img/new.png" alt="Logo" />
+        
+
+        <p>garfbradaz new blog, hosted on github. Rambling about coding, running and any other of my ramblings.</p>
+
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <h1>Episode 5 - JSON API using ASP.NET Core, Docker & MongoDB -  Modelling, Controller and Unit Tests Part I - BookStore</h1>
+<p>17 Feb 2019 - gareth - blog</p>
+
+<h2 id="previously-on-dcoding">Previously on Dcoding</h2>
+
+<p>In <a href="/blog/2018/12/31/Episode-4-JSON-API-ASP.NET-Core-Docker-Compose.html">Episode 4</a> I set up our <code class="highlighter-rouge">docker-compose</code> files to allow us to knit together our application and the services it will be use. Today’s episode is focusing on <strong>Modelling, Controller and Unit Tests for the BookStore Object</strong>. <!--more--></p>
+
+<p>Here is a reminder on the sample <em>User Stories / Epics</em> for phase 1.</p>
+
+<blockquote>
+  <p>As a <em>book store</em>
+I can <em>add</em> our <em>store</em> to the database
+<em>So</em> we can be accessible</p>
+
+  <p>As a <em>book store</em>
+I can <em>add</em> our <em>inventory</em> to our database
+<em>So</em> we can expose our inventory</p>
+
+  <p>As a <em>book store</em>
+We can <em>update</em> a books stock level
+<em>For</em> an accurate stock level</p>
+
+  <p>As a <em>API consumer</em>
+I can look up a <em>stores address</em>
+<em>So</em> we know where to buy a <em>book</em></p>
+
+  <p>As a <em>API consumer</em>
+I can look up a <em>book</em>
+<em>So</em> we can get a <em>list</em> of <em>stores</em> who sell a
+<em>book</em></p>
+
+  <p>As <em>book store IT Security</em>
+We can add <em>API Keys</em> to the API
+<em>For</em> API Consumers to use when querying the API</p>
+</blockquote>
+
+<h2 id="dependency-on-mongodb">Dependency on MongoDB</h2>
+
+<p>Our application will ultimately be using <em>MongoDB</em> as its back end data store. We need to take a dependency on the MongoDB driver. This will allow us to communicate with and use MongoDB.</p>
+
+<p>Using your shell of choice, change directory to <code class="highlighter-rouge">../src/api</code> directory. To recap, our directory structure is:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    .
+    ├── src
+    |   ├── api
+    |       |
+    |       ├── BookStoreApp.WebApi.csproj
+    |       ├── Dockerfile
+    ├── tests
+    |   ├── integration
+    |   ├── unit
+    |       ├── BookStore.Tests.csproj
+    ├── docker
+</code></pre></div></div>
+
+<p><strong>Note:</strong> Something has changed, can you guess what? Yep that’s right, I have renamed the <code class="highlighter-rouge">.csproj</code> to <code class="highlighter-rouge">BookStoreApp.WebApi.csproj</code> instead of <code class="highlighter-rouge">BookStore.WebApi.csproj</code>.</p>
+
+<p>Now run the following command, which will add the latest Nuget package to your api project.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dotnet add package  MongoDB.Driver
+</code></pre></div></div>
+
+<p>We will be returning to MongoDB once we have the unit test infrastructure set up in the next episode.</p>
+
+<h2 id="bookstore">BookStore</h2>
+<h3 id="modelling">Modelling</h3>
+
+<p>The first of our models (the <em>M</em> in <strong>M</strong>VC), will represent our <strong>BookStore</strong>. A simple <a href="https://en.wikipedia.org/wiki/Plain_old_CLR_object">Plain old C# (POCO)</a> to represent this:</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">/// &lt;summary&gt;</span>
+    <span class="c1">/// BookStore POCO.</span>
+    <span class="c1">/// &lt;/summary&gt;</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">BookStore</span>
+    <span class="p">{</span>
+        <span class="p">[</span><span class="n">BsonId</span><span class="p">]</span>
+        <span class="k">public</span> <span class="n">ObjectId</span>  <span class="n">Id</span> <span class="p">{</span><span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span><span class="k">get</span><span class="p">;</span><span class="k">set</span><span class="p">;}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">AddressLine1</span> <span class="p">{</span><span class="k">get</span><span class="p">;</span><span class="k">set</span><span class="p">;}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">AddressLine2</span> <span class="p">{</span><span class="k">get</span><span class="p">;</span><span class="k">set</span><span class="p">;}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">AddressLine3</span> <span class="p">{</span><span class="k">get</span><span class="p">;</span><span class="k">set</span><span class="p">;}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">City</span> <span class="p">{</span><span class="k">get</span><span class="p">;</span><span class="k">set</span><span class="p">;}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">PostCode</span> <span class="p">{</span><span class="k">get</span><span class="p">;</span><span class="k">set</span><span class="p">;}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">TelephoneNumber</span> <span class="p">{</span><span class="k">get</span><span class="p">;</span><span class="k">set</span><span class="p">;}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Default constructor</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="nf">BookStore</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="n">Id</span> <span class="p">=</span> <span class="n">ObjectId</span><span class="p">.</span><span class="nf">GenerateNewId</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<p>I added a <code class="highlighter-rouge">Model</code> folder to my <code class="highlighter-rouge">../api</code> folder where this was added. MongoDB uses a serialization format standard called <a href="https://docs.mongodb.com/manual/reference/glossary/#term-bson">BSON</a>. BSON has the idea of <em>types</em> and one of those types is <a href="https://docs.mongodb.com/manual/reference/bson-types/#objectid"><code class="highlighter-rouge">ObjectId</code></a> which represents a unique id for the record. You decorate the <code class="highlighter-rouge">Id</code> property with <code class="highlighter-rouge">[BsonId]</code> attribute, to inform the MongoDB driver what field is your <code class="highlighter-rouge">BsonId</code> field.</p>
+
+<p>I have also created a default constructor that sets that Id up. Now we have created the <code class="highlighter-rouge">Models</code> directory and structure is now the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    .
+    ├── src
+    |   ├── api
+    |       ├── Models
+    |           ├── BookStore.cs
+    |       ├── BookStoreApp.WebApi.csproj
+    |       ├── Dockerfile
+    ├── tests
+    |   ├── integration
+    |   ├── unit
+    |       ├── BookStore.Tests.csproj
+</code></pre></div></div>
+
+<h3 id="controller">Controller</h3>
+
+<p>Now we need to create a <strong>BookStore</strong> controller. A controller is the <em>C</em> in MV<strong>C</strong> pattern. The controller will handle the HTTP requests that come in using <em>Actions</em>. The HTTP requests are mapped to Actions via the routing pipeline of MVC. For WebAPIs, they map to specific HTTP methods like <code class="highlighter-rouge">GET</code>, <code class="highlighter-rouge">POST</code>, <code class="highlighter-rouge">PUT</code> etc.</p>
+
+<p>ASP.NET expects you to follow conventions when creating your own Controllers:</p>
+
+<ul>
+  <li>The Controller class name always ends with <code class="highlighter-rouge">Controller</code>.</li>
+  <li>The Controller class should reside in a folder called <code class="highlighter-rouge">Controllers</code>.</li>
+  <li>The Controller class should inherit from <code class="highlighter-rouge">Microsoft.AspNetCore.Mvc.ControllerBase</code> (WebAPI) / <code class="highlighter-rouge">Microsoft.AspNetCore.Mvc.Controller</code> (ASP.NET MVC Apps with Views).</li>
+</ul>
+
+<p>When you do a <code class="highlighter-rouge">dotnet new webapi</code> the templates include a standard <code class="highlighter-rouge">ValuesController.cs</code> that lives in a <code class="highlighter-rouge">Controllers</code> folder. Create a new <code class="highlighter-rouge">BookStoreController.cs</code> file in there:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    .
+    ├── src
+    |   ├── api
+    |       ├── Controllers
+    |           ├── BookStoreController.cs
+    |       ├── Models
+    |           ├── BookStore.cs
+    |       ├── BookStoreApp.WebApi.csproj
+    |       ├── Dockerfile
+    ├── tests
+    |   ├── integration
+    |   ├── unit
+    |       ├── BookStore.Tests.csproj
+</code></pre></div></div>
+
+<p>To this file I have added the following:</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="p">[</span><span class="nf">Route</span><span class="p">(</span><span class="s">"api/[controller]"</span><span class="p">)]</span>
+    <span class="p">[</span><span class="n">ApiController</span><span class="p">]</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">BookStoreController</span> <span class="p">:</span> <span class="n">ControllerBase</span>
+    <span class="p">{</span>
+        <span class="c1">// GET api/values</span>
+        <span class="p">[</span><span class="n">HttpGet</span><span class="p">]</span>
+        <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">ActionResult</span><span class="p">&gt;</span> <span class="nf">Get</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">bookStore</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">BookStore</span><span class="p">&gt;{</span>
+                <span class="k">new</span> <span class="n">BookStore</span> <span class="p">{</span>
+                    <span class="n">Name</span> <span class="p">=</span> <span class="s">"Waterstones"</span><span class="p">,</span>
+                    <span class="n">AddressLine1</span> <span class="p">=</span> <span class="s">"The Dolphin &amp; Anchor"</span><span class="p">,</span>
+                    <span class="n">AddressLine2</span> <span class="p">=</span> <span class="s">"West Street"</span><span class="p">,</span>
+                    <span class="n">City</span> <span class="p">=</span> <span class="s">"Chichester"</span><span class="p">,</span>
+                    <span class="n">PostCode</span> <span class="p">=</span> <span class="s">"PO19 1QD"</span><span class="p">,</span>
+                    <span class="n">TelephoneNumber</span> <span class="p">=</span> <span class="s">"01234 773030"</span>
+                <span class="p">}</span>
+            <span class="p">};</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="n">Task</span><span class="p">.</span><span class="nf">Run</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="nf">JsonResult</span><span class="p">(</span><span class="n">bookStore</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<p>Its a simple <code class="highlighter-rouge">GET</code> method that just returns a hard coded <code class="highlighter-rouge">BookStore</code> object. For today’s episode we are just concentrating on getting our unit test infrastructure up and running so we can ignore <code class="highlighter-rouge">PUT</code>, <code class="highlighter-rouge">POST</code> and <code class="highlighter-rouge">DELETE</code> until my next episode.</p>
+
+<h3 id="unit-tests">Unit Tests</h3>
+
+<p>Before we move forward we need to use the <code class="highlighter-rouge">dotnet</code> tooling to add a project reference to our tests project. Change directory to <code class="highlighter-rouge">tests\unit</code> and do the following to add a reference:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dotnet add reference ..<span class="se">\.</span>.<span class="se">\s</span>rc<span class="se">\a</span>pi<span class="se">\B</span>ookStoreApp.WebApi.csproj
+</code></pre></div></div>
+
+<p>I have also added two basic test methods to cover our new <code class="highlighter-rouge">GET</code> method in oir controller:</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">public</span> <span class="k">class</span> <span class="nc">ControllerTests</span>
+    <span class="p">{</span>
+        <span class="p">[</span><span class="n">Fact</span><span class="p">]</span>
+        <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">BookStoreController_Get_Should_Return_ActionResult</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="c1">//Arrange</span>
+            <span class="kt">var</span> <span class="n">controller</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">BookStoreController</span><span class="p">();</span>
+
+            <span class="c1">//Act</span>
+            <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="k">await</span> <span class="n">controller</span><span class="p">.</span><span class="nf">Get</span><span class="p">();</span>
+
+            <span class="c1">//Assert</span>
+            <span class="n">Assert</span><span class="p">.</span><span class="n">IsType</span><span class="p">&lt;</span><span class="n">JsonResult</span><span class="p">&gt;(</span><span class="n">result</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="p">[</span><span class="n">Fact</span><span class="p">]</span>
+        <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">BookStoreController_Get_Should_Return_Correct_BookStore_Data</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="c1">//Arrange</span>
+            <span class="kt">var</span> <span class="n">controller</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">BookStoreController</span><span class="p">();</span>
+
+            <span class="c1">//Act</span>
+            <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="k">await</span> <span class="n">controller</span><span class="p">.</span><span class="nf">Get</span><span class="p">();</span>
+            <span class="kt">var</span> <span class="n">json</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">ToJson</span><span class="p">&lt;</span><span class="n">BookStore</span><span class="p">&gt;();</span>
+
+            <span class="c1">//Assert</span>
+            <span class="n">Assert</span><span class="p">.</span><span class="nf">True</span><span class="p">(</span><span class="n">json</span><span class="p">[</span><span class="m">0</span><span class="p">].</span><span class="n">Name</span> <span class="p">==</span> <span class="s">"Waterstones"</span><span class="p">,</span><span class="s">$"Assert failed, received </span><span class="p">{</span><span class="n">json</span><span class="p">[</span><span class="m">0</span><span class="p">].</span><span class="n">Name</span><span class="p">}</span><span class="s"> "</span><span class="p">);</span>
+            <span class="n">Assert</span><span class="p">.</span><span class="nf">True</span><span class="p">(</span><span class="n">json</span><span class="p">[</span><span class="m">0</span><span class="p">].</span><span class="n">PostCode</span> <span class="p">==</span> <span class="s">"PO19 1QD"</span><span class="p">,</span><span class="s">$"Assert failed, received </span><span class="p">{</span><span class="n">json</span><span class="p">[</span><span class="m">0</span><span class="p">].</span><span class="n">PostCode</span><span class="p">}</span><span class="s"> "</span><span class="p">);</span>
+            <span class="n">Assert</span><span class="p">.</span><span class="nf">True</span><span class="p">(</span><span class="n">json</span><span class="p">[</span><span class="m">0</span><span class="p">].</span><span class="n">TelephoneNumber</span> <span class="p">==</span> <span class="s">"01234773030"</span><span class="p">,</span><span class="s">$"Assert failed, received </span><span class="p">{</span><span class="n">json</span><span class="p">[</span><span class="m">0</span><span class="p">].</span><span class="n">TelephoneNumber</span><span class="p">}</span><span class="s"> "</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<p>Before we start integrating with Docker, we can test using (you guessed it), the <code class="highlighter-rouge">dotnet</code> tooling. Make sure you are in the <code class="highlighter-rouge">tests\unit</code> directory and run:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dotnet restore
+dotnet <span class="nb">test</span>
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">test</code> will set off a <code class="highlighter-rouge">dotnet build</code> first then run our XUnit tests. One test should fail and this will be outputted similar to this:</p>
+
+<blockquote>
+  <p>Total tests: 2. Passed: 1. Failed: 1. Skipped: 0.</p>
+
+  <p>Test Run Failed.</p>
+
+  <p>Test execution time: 2.6340 Seconds</p>
+</blockquote>
+
+<p>The error was intentional, there should of been a space in between <code class="highlighter-rouge">"01234773030"</code>, I fixed this:</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code>            <span class="n">Assert</span><span class="p">.</span><span class="nf">True</span><span class="p">(</span><span class="n">json</span><span class="p">[</span><span class="m">0</span><span class="p">].</span><span class="n">TelephoneNumber</span> <span class="p">==</span> <span class="s">"01234 773030"</span><span class="p">,</span><span class="s">$"Assert failed, received </span><span class="p">{</span><span class="n">json</span><span class="p">[</span><span class="m">0</span><span class="p">].</span><span class="n">TelephoneNumber</span><span class="p">}</span><span class="s"> "</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Re-run the tests and everything should now be green:</p>
+
+<blockquote>
+  <p>Total tests: 2. Passed: 2. Failed: 0. Skipped: 0.</p>
+
+  <p>Test Run Successful.</p>
+
+  <p>Test execution time: 3.1173 Seconds</p>
+</blockquote>
+
+<p>Now we have a project with some basic logic within a controller, and a very basic model. We have also started creating some tests to cover this code. Now we need to <em>build and run</em> the application. We could at this stage use the normal route for that, but as these episodes include <strong>Docker</strong>, lets integrate what we know into a docker pipeline.</p>
+
+<h2 id="docker">Docker</h2>
+
+<p>Firstly in the root of the project create a new Docker file. Your project structure should look like this now:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    .
+    ├── src
+    ├── tests
+    ├── Dockerfile
+</code></pre></div></div>
+
+<p>Here we will create a multi-stage <code class="highlighter-rouge">Dockerfile</code> that will restore, build and run our tests. Here is the first stage:</p>
+
+<pre><code class="language-Dockerfile">FROM microsoft/dotnet:2.2-sdk AS build-env
+WORKDIR /app
+
+COPY src/api/BookStoreApp.WebApi.csproj ./src/api/
+RUN dotnet restore ./src/api/BookStoreApp.WebApi.csproj
+COPY tests/unit/BookStore.Tests.csproj ./tests/unit/
+RUN dotnet restore ./tests/unit/BookStore.Tests.csproj
+
+COPY . .
+</code></pre>
+
+<p>You should be familiar with this now from previous episodes. This time take note that we are copying the unit test project files in to the build context. Also note we need to keep the same directory structure as before, because we added a <code class="highlighter-rouge">dotnet add reference</code> previously into the test project. If the directories didn’t match we would get build errors.</p>
+
+<p>Run the following:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> docker build <span class="nt">-t</span> test-ep5 <span class="nb">.</span>
+</code></pre></div></div>
+
+<p>Now do a <code class="highlighter-rouge">docker image</code> and you will see a massive image there:</p>
+
+<p><img src="/assets/img/posts/test-ep5-size.png" alt="test-5 image" /></p>
+
+<p>Docker has a way of managing this, meet <code class="highlighter-rouge">.dockerignore</code>.</p>
+
+<h3 id="dockerignore">.dockerignore</h3>
+
+<p>This file behaves similarly to a <code class="highlighter-rouge">.gitignore</code>. It tells docker which files to not copying in during a  build. So how do you know which files to ignore, well I learnt a good trick from <a href="https://twitter.com/g0t4">Wes Higbee</a> by passing in a <code class="highlighter-rouge">ls alR</code> to list out your directories. Run the following:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">--rm</span> test-ep5 <span class="nb">ls</span> <span class="nt">-alR</span>
+</code></pre></div></div>
+
+<p>This will list out your containers file system, and you can easily see what is copied in. So things like <code class="highlighter-rouge">.vscode</code>, <code class="highlighter-rouge">.git</code> folders and <code class="highlighter-rouge">bin</code> directories. None of this stuff is needed during the build stage of this multi stage <code class="highlighter-rouge">Dockerfile</code>, so lets exclude it, using similar glob patterns you can use in <code class="highlighter-rouge">.gitignore</code> files. Add a <code class="highlighter-rouge">.dockerignore</code> file to your root:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    .
+    ├── src
+    ├── tests
+    ├── Dockerfile
+    ├── .dockerignore
+</code></pre></div></div>
+
+<p>Then add the following, excluding files and artefacts that are not needed for a restore and build. We exclude things like our <code class="highlighter-rouge">docker</code> folder and <code class="highlighter-rouge">.ps1</code> scripts we have been using. Plus the <code class="highlighter-rouge">README.md</code> and dockerfiles.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>**/.vscode/
+**/.git/
+docker/
+**/bin/
+**/obj/
+**/.dockerignore/
+**/Dockerfile*
+**/docker-compose*.yml/
+run.ps1
+clean.ps1
+README.md
+</code></pre></div></div>
+
+<p>Re-run:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> docker build <span class="nt">-t</span> test-ep5 <span class="nb">.</span>
+ docker run <span class="nt">--rm</span> test-ep5 <span class="nb">ls</span> <span class="nt">-alR</span>
+</code></pre></div></div>
+
+<p>You will see a cleaner build plus about 100MB less space than previously:</p>
+
+<p><img src="/assets/img/posts/test-ep5-size-2.png" alt="test-5 image" /></p>
+
+<h2 id="unit-tests-in-docker">Unit Tests in Docker</h2>
+
+<p>So now we have pruned our Image, we can add our tests to our <code class="highlighter-rouge">Dockerfile</code>. Add the following into your <code class="highlighter-rouge">Dockerfile</code>:</p>
+
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">RUN </span>dotnet <span class="nb">test </span>tests/unit/BookStore.Tests.csproj
+<span class="k">RUN </span>dotnet publish src/api/BookStoreApp.WebApi.csproj <span class="nt">-o</span> /publish
+</code></pre></div></div>
+
+<p>We run what we ran on the commandline early (see no magic). This will run out unit tests, then if they pass, we will publish a new release ready for our 2nd stage to use, by running  <code class="highlighter-rouge">dotnet publish</code> and outputting to a new <code class="highlighter-rouge">/publish</code> directory.</p>
+
+<p>Run again using the following and see your test success!</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> docker build <span class="nt">-t</span> test-ep5 <span class="nb">.</span>
+</code></pre></div></div>
+
+<h3 id="running-your-application">Running your application</h3>
+
+<p>In previous episodes we had a multi stage <code class="highlighter-rouge">Dockerfile</code> with a 2nd stage that runs the application itself. No different here, our 2nd stage allows us to run our application.</p>
+
+<p><strong>NB:</strong> Once we have added this, we cannot use our <strong>“ls aLR”</strong> trick Wes taught us, as our <code class="highlighter-rouge">ENTRYPOINT</code> will be set with <code class="highlighter-rouge">dotnet</code>. Also the 1st build stage is thrown away once used so we cannot access the directory fully anyway.</p>
+
+<p>Add the following to your <code class="highlighter-rouge">Dockerfile</code> which is our runtime stage:</p>
+
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">FROM</span><span class="s"> microsoft/dotnet:2.2-aspnetcore-runtime AS runtime-env</span>
+<span class="k">WORKDIR</span><span class="s"> /publish</span>
+<span class="k">COPY</span><span class="s"> --from=build-env /publish .</span>
+<span class="k">ENTRYPOINT</span><span class="s"> [ "dotnet","BookStoreApp.WebApi.dll" ]</span>
+</code></pre></div></div>
+
+<p>Rebuild the Image first:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> docker build <span class="nt">-t</span> test-ep5 <span class="nb">.</span>
+</code></pre></div></div>
+
+<p>Then we can run the Image as a container process, overriding some of the ASP.NET Core environment variables using <code class="highlighter-rouge">-e</code>. We would override these usually when using <code class="highlighter-rouge">docker-compose</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-e</span> <span class="s2">"ASPNETCORE_ENVIRONMENT=Development"</span> <span class="nt">-e</span> <span class="s2">"ASPNETCORE_URLS=http://+:5003"</span> <span class="nt">-p</span> 5003:5003 <span class="nt">--rm</span> <span class="nt">-it</span> test-ep5
+</code></pre></div></div>
+
+<p>You can then use your application of choice (I’m using Postman, more to come on that) to hit <a href="http://localhost:5003/api/bookstore">http://localhost:5003/api/bookstore</a>. You should receive the following JSON payload:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5c6947093497a200016c0dee"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Waterstones"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"addressLine1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The Dolphin &amp; Anchor"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"addressLine2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"West Street"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"addressLine3"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Chichester"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"postCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PO19 1QD"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"telephoneNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01234 773030"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="next-time">Next time</h2>
+
+<p>That’s it for today. Remember all code is on <a href="https://github.com/garfbradaz/webapi-episodes/tree/master/episode-5">Github</a> if you want it.</p>
+
+<p>On our next episode we will start integrating MongoDB into the application.</p>
+
+
+
+
+
+
+    <div class="comments">
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            var disqus_shortname = 'garfbradaz';
+            (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq); })();    
+        </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div> 
+
+
+
+
+
+
+      </section>
+      <footer>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/assets/js/scale.fix.js"></script>
+    <script src="/assets/js/matrix.js"></script>
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-130935873-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    
+  </body>
+</html>
