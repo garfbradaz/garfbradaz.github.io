@@ -225,7 +225,7 @@ dotnet restore
 dotnet test
 ```
 
-The `test` will set off a `dotnet build` first then run our XUnit tests. One test should fail and this will be outputted similar to this:
+The `test` will set off a `dotnet build` first then ran our XUnit tests. One test should fail and this will be outputted similar to this:
 
 > Total tests: 2. Passed: 1. Failed: 1. Skipped: 0.
 >
@@ -342,13 +342,15 @@ RUN dotnet test tests/unit/BookStore.Tests.csproj
 RUN dotnet publish src/api/BookStoreApp.WebApi.csproj -o /publish
 ```
 
-We run what we ran on the commandline early (see no magic). This will run out unit tests, then if they pass, we will publish a new release ready for our 2nd stage to use, by running  `dotnet publish` and outputting to a new `/publish` directory.
+We run what we ran on the commandline earlier (see no magic). This will run our unit tests, then if they pass, we will publish a new release ready for our 2nd stage to use, by running  `dotnet publish` and outputting to a new `/publish` directory.
 
 Run again using the following and see your test success!
 
 ```bash
  docker build -t test-ep5 .
 ```
+
+If these unit tests fail, we will see the same as we did previously, so you can see how this all ties in. And just ecause we run our tests in docker, `dotnet` is still behaving the same. No docker magic.
 
 ### Running your application
 
@@ -393,6 +395,8 @@ You can then use your application of choice (I'm using Postman, more to come on 
     }
 ]
 ```
+
+And thats it, we are slowly starting to move our development and unit test pipeline into docker itself.
 
 ## Next time
 
